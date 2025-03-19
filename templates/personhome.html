@@ -1,0 +1,438 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenBits - Individual Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #d4fc79, #96e6a1);
+        }
+        header {
+            /* background: linear-gradient(90deg, #1b3727, #9ee1bc); */
+            color: #161414;;
+            padding: 20px;
+            text-align: center;
+            font-size: 35px;
+            font-weight: bold;
+            font-style: italic;
+    /* font-weight: bold; */
+    font-family: monospace;
+            /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); */
+            text-decoration: underline;
+        }
+        .container {
+            width: 80%;
+            margin: 30px auto;
+            padding: 25px;
+            background:#367838cc;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(90deg, #2E8B57, #3CB371);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            background: linear-gradient(90deg, #3CB371, #2E8B57);
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(90deg, #2E8B57, #3CB371);
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            font-size: 16px;
+        }
+        h2 {
+            color: #2E8B57;
+        }
+
+
+    </style>
+</head>
+<body>
+    <header>Welcome to GreenBits - {{sendname}}</header>
+    <div class="container">
+        <div class="section">
+            <h2>Your Role in a Green Future</h2>
+            <p>Individuals play a vital role in managing e-waste responsibly. By recycling electronic items, you contribute to a cleaner environment and reduce landfill waste.</p>
+        </div>
+        
+        <div class="section">
+            <h2>Upload Your E-Waste</h2>
+            <p>Upload an image of your e-waste. Our AI system will recognize the material type and estimate its value based on details like age, damage, and usability.</p>
+            <input type="file" accept="image/*">
+            <button class="btn">Analyze</button>
+        </div>
+        
+        <div class="section">
+            <h2>Self-Paced E-Waste Management Videos</h2>
+            <video width="100%" controls>
+                <source src="video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        
+        <div class="section">
+            <h2>Rewards Criteria</h2>
+            <p>Earn rewards for every responsible e-waste submission! Get points based on material type, usability, and quantity.</p>
+        </div>
+        
+        <div class="section">
+            <h2>Your Progress</h2>
+            <p>Check how close you are to earning your next reward on the map.</p>
+            <img src="map-placeholder.png" alt="Reward Progress Map" width="100%" style="border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);">
+        </div>
+    </div>
+    <!-- <div class="footer">&copy; 2025 GreenBits. All rights reserved.</div> -->
+<!-- </body>
+</html> --> -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>GreenBits - E-Waste Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            
+        }
+        header {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            font-family: cursive;
+        }
+        .container {
+            /* width: 90%; */
+            margin-top: 33px;
+            overflow: hidden;
+            padding: 20px;
+            background:#7fb83de6;
+                        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            border-color: black;
+            border-style: solid;
+        }
+        .hero {
+            text-align: center;
+            padding: 50px;
+            background: url('/static/images/bck3.jpg') no-repeat center center/cover;
+            color: rgb(247, 241, 241);
+            border-radius: 10px;
+        }
+        .hero h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+        .hero p {
+            font-size: 18px;
+        }
+        .features {
+            display: flex;
+            justify-content: space-between;
+            /* background: url('/static/images/bck2.jpg') no-repeat center center/cover; */
+            margin-top: 30px;
+        }
+        .feature-box {
+            flex: 1;
+    padding: 20px;
+    font-size: 17px;
+    font-family: cursive;
+    background: #e8f5e9;
+    text-align: center;
+    margin: 10px;
+    background: url(/static/images/bck2.jpg) no-repeat center center / cover;
+    border-radius: 10px;
+    background-attachment: fixed;
+        }
+        .feature-box:hover{
+            cursor: pointer;
+            border-color: black;
+            border-style: solid;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #4CAF50;
+            color: white;
+            margin-top: 20px;
+        }
+
+        #username{
+            color: black;
+    font-style: italic;
+    font-variant: all-small-caps;
+    font-weight: 700;
+    text-decoration: overline;
+        }
+
+            .ai-image-process h1{
+                font-size: 2.5rem;
+                color: darkseagreen;
+            }
+
+        .ai-image-process {
+            background-image:url('/static/images/tree.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            color: antiquewhite;
+            border-style:solid;
+            border-color: #4CAF50;
+            font-family: monospace;
+            height: 900px;
+            /* width: 70%; */
+            /* background: rgba(255, 255, 255, 0.1); */
+            margin: 30px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            /* width: 90%;
+            max-width: 400px; */
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background:transparent;
+            color: black;
+            cursor: pointer;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            background: #ffcc00;
+            color: black;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #ffdd44;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #uploaded-image {
+            display: none;
+            width: 150px;  /* Adjust as needed */
+            height: 150px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 2px solid #ccc;
+            margin-top: 10px;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            transition: 0.3s;
+        }
+        .reward-back{
+            /* background-image: url('/static/images/re.jpg'); */
+            background: radial-gradient(circle, #FF5733, #3f51b5c9);
+            border-radius: 30px;
+        }
+
+        .me{
+            font-size: xxx-large;
+    font-weight: 200;
+    font-family: cursive;
+    color: #FFEB3B;
+    padding-left: 38px;
+    font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        Welcome to GreenBits, <span id="username">{{sendname}}</span>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Join the Movement for a Greener Tomorrow</h1>
+            <p>Recycle your e-waste responsibly and contribute to a sustainable future.</p>
+        </div>
+
+        <div class="features">
+            <div class="feature-box">
+                <h2>Easy E-Waste Disposal</h2>
+                <p>Find nearby e-waste collection centers with just a click.</p>
+            </div>
+            <div class="feature-box">
+                <h2>Track Your Contributions</h2>
+                <p>Monitor your recycling impact and get rewarded.</p>
+            </div>
+            <div class="feature-box">
+                <h2>Learn & Educate</h2>
+                <p>Explore resources on sustainable practices and e-waste management.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="ai-image-process">
+        <h1>Smart-Management Analyzer!</h1>
+
+        <h2>Upload your E-Product</h2>
+        <form id="upload-form" enctype="multipart/form-data">
+            <input type="file" id="file-input" name="file" accept="image/*" required>
+            <button type="submit">Predict</button>
+        </form>
+        <img id="uploaded-image" src="" alt="Uploaded Image Preview">
+        <div id="result"></div>
+        <div id="handling-steps" class="handling-steps" style="display: none;"></div>
+    </div>
+
+
+    <div class="reward-back">
+        <h1 class="me">Earn Your Rewards!</h1>
+    <div class="max-w-4xl mx-auto p-6 mt-10">
+        <!-- How to Earn GreenBits -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold text-green-600">🌱 How to Earn GreenBits</h2>
+            <p class="text-gray-600 mt-2">Dispose of your e-waste responsibly and earn GreenBits based on the product size:</p>
+            <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="card bg-green-100 p-4 rounded-lg text-center">
+                    <h3 class="text-lg font-semibold">📱 Small Product</h3>
+                    <p class="text-gray-700">(200g - 1kg)</p>
+                    <p class="text-xl font-bold text-green-700">+2 GreenBits</p>
+                </div>
+                <div class="card bg-green-200 p-4 rounded-lg text-center">
+                    <h3 class="text-lg font-semibold">💻 Medium Product</h3>
+                    <p class="text-gray-700">(1kg - 10kg)</p>
+                    <p class="text-xl font-bold text-green-700">+5 GreenBits</p>
+                </div>
+                <div class="card bg-green-300 p-4 rounded-lg text-center">
+                    <h3 class="text-lg font-semibold">📺 Large Product</h3>
+                    <p class="text-gray-700">(10kg+)</p>
+                    <p class="text-xl font-bold text-green-700">+10 GreenBits</p>
+                </div>
+            </div>
+            <div class="mt-6 p-4 bg-green-50 border-l-4 border-green-400">
+                <h3 class="text-lg font-semibold text-green-700">💡 Earn More GreenBits</h3>
+                <p class="text-gray-700">✔ Continuous 6 months of successful disposal earns <span class="font-bold">+60 GreenBits</span></p>
+                <p class="text-gray-700">✔ Add new users with your invite code and earn <span class="font-bold">+2 GreenBits</span> per user</p>
+            </div>
+        </div>
+
+        <!-- How to Use GreenBits -->
+        <div class="bg-white p-6 rounded-lg shadow-lg mt-8">
+            <h2 class="text-2xl font-bold text-blue-600">💰 How to Use GreenBits</h2>
+            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="card bg-blue-100 p-4 rounded-lg text-center">
+                    <h3 class="text-lg font-semibold">🛍️ Shop with GreenBits</h3>
+                    <p class="text-gray-700">Use your GreenBits to buy eco-friendly products & exclusive merchandise.</p>
+                </div>
+                <div class="card bg-blue-200 p-4 rounded-lg text-center">
+                    <h3 class="text-lg font-semibold">🔖 Discount on Electronics</h3>
+                    <p class="text-gray-700">Every <span class="font-bold">60 GreenBits</span> gives you <span class="text-green-700 font-bold">₹12</span> off on your next purchase!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="footer">
+        &copy; 2025 GreenBits | Making E-Waste Management Smarter
+    </div>
+
+    <script>
+
+document.getElementById("file-input").addEventListener("change", function (event) {
+            let file = event.target.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    let img = document.getElementById("uploaded-image");
+                    img.src = e.target.result;
+                    img.style.display = "block"; // Show the image
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.querySelector("#upload-form").onsubmit = async function (e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            let response = await fetch("/predict", {
+                method: "POST",
+                body: formData
+            });
+            let result = await response.json();
+            let stepsDiv = document.getElementById("handling-steps");
+
+            if (result.prediction === "Can't Determine") {
+            document.getElementById("result").innerHTML = `<h3>Prediction: Can't Determine</h3>`;
+            stepsDiv.style.display = "none";
+        } else {
+            document.getElementById("result").innerHTML = 
+                `<h3>Product: ${result.prediction}</h3>
+                 <p>Confidence: ${result.confidence}</p>`;
+
+                 let stepsHtml = `<h3>How to Manage This Product?</h3><ul>`;
+                result.handling_steps.forEach(step => {
+                    stepsHtml += `<li>${step}</li>`;
+                });
+                stepsHtml += `</ul>`;
+
+                stepsDiv.innerHTML = stepsHtml;
+                stepsDiv.style.display = "block";
+        }
+
+
+
+            // document.getElementById("result").innerHTML = 
+            //     `<h3>Prediction: ${result.prediction}</h3>
+            //      <p>Confidence: ${result.confidence}</p>`;
+        };
+    </script>
+
+</body>
+</html>
+
