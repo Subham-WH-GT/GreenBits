@@ -1,20 +1,42 @@
-from flask import Flask, render_template, request, redirect, url_for, session,jsonify
-import sqlite3
-from model import predict_e_waste
-import os
-from werkzeug.utils import secure_filename
+from flask import Flask,  render_template, request, redirect, url_for, session,jsonify
+import sqlite3 
+import requests
+from model import predict_e_waste 
+import firebase_admin
+from firebase_admin import credentials, firestore
+import os 
+from dotenv import load_dotenv 
+load_dotenv()
+import pandas as pd
+from werkzeug.utils import secure_filename 
+from flask_cors import CORS
+from datetime import datetime 
+import googleapiclient.discovery 
+import google.generativeai as genai 
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = 'binarybrain@Greenbits2025'
 
-# UPLOAD_FOLDER = "images"
-# os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.secret_key = os.getenv("SECRET_KEY")
+
+
+CORS(app)
+
+cred = credentials.Certificate("firebase-admin-sdk.json")  
+firebase_admin.initialize_app(cred)
+db = firestore.client()
+
+
+
+
+genai.configure(api_key=os.getenv("GENAI_API_KEY")) 
+
+df = pd.read_csv("ewaste_collection_centers_full.csv") 
 
 UPLOAD_FOLDER = os.path.join(app.root_path, "static", "images")
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure the folder exists
+os.makedirs(UPLOAD_FOLDER, exist_ok=True) 
 
-# Set the upload folder in app configuration
+
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 E_WASTE_HANDLING_STEPS = {
@@ -72,21 +94,9 @@ E_WASTE_HANDLING_STEPS = {
 }
 
 
-# def get_db_connection():
-#     conn = sqlite3.connect("users.db")
-#     conn.row_factory = sqlite3.Row
-#     return conn
-
-def get_db_connection():
-    conn = sqlite3.connect("users.db", check_same_thread=False, timeout=10)  # Added timeout
-    conn.row_factory = sqlite3.Row
-    return conn
 
 
-def get_db_connection2():
-    conn=sqlite3.connect("organisation.db")
-    conn.row_factory=sqlite3.Row
-    return conn 
+
 
 
 
@@ -99,151 +109,153 @@ def landing():
 def home():
     return render_template('home.html')
 
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
 
-        hashed_password = generate_password_hash(password)  # Hash password
-
-        conn = get_db_connection()
-        try:
-            conn.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_password))
-            conn.commit()
-            conn.close()
-            return redirect(url_for('login'))
-        except:
-            return render_template('signup.html', error="Username already exists")
-
-    return render_template('signup.html')
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.clear() 
+    return jsonify({"message": "Logged out"}), 200
 
 
-@app.route('/orgsign', methods=['GET', 'POST'])
-def orgsign():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        confirmpassword=request.form['confirm password']
-
-        # hashed_password = generate_password_hash(password)
-
-        if password!=confirmpassword:
-            return render_template('orgsign.html',error="password doesn't matched")
-
-        hashed_password = generate_password_hash(password)  # Hash password
-
-        conn = get_db_connection2()
-        try:
-            conn.execute("INSERT INTO organisation (orgname, password) VALUES (?, ?)", (username, hashed_password))
-            conn.commit()
-            conn.close()
-            return redirect(url_for('orglogin'))
-        except:
-            return render_template('orgsign.html', error="Username already exists")
-
-    return render_template('orgsign.html')
 
 
-@app.route('/orglogin', methods=['GET', 'POST'])
-def orglogin():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
 
-        conn = get_db_connection2()
-        user = conn.execute("SELECT * FROM organisation WHERE orgname = ?", (username,)).fetchone()
-        conn.close()
+@app.route("/org_signin", methods=["POST"])
+def org_signin():
+    try:
+        data = request.get_json()
+        uid = data.get("uid")
+        email = data.get("email")
+        name=data.get("name")
 
-        if user and check_password_hash(user['password'], password):
-            session['user'] = username
+        if not uid or not email:
+            print("❌ Missing required fields:", data)
+            return jsonify({"error": "Missing required fields"}), 400
+
+        org_ref = db.collection("organizations").document(uid)
+        org_doc = org_ref.get()
+
+        
+
+        if org_doc.exists:
+            org_data = org_doc.to_dict()
+            print(f"📢 User {uid} found in DB:", org_data)
+
             
-            # Store login event
-            conn = get_db_connection2()
-            conn.execute("INSERT INTO login_activity_organisation (orgname) VALUES (?)", (username,))
-            conn.commit()
-            conn.close()
-            
-            return redirect(url_for('home'))
         else:
-            return render_template('orglogin.html', error="Invalid Credentials")
-
-    return render_template('orglogin.html')
-
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     if request.method == 'POST':
-#         username = request.form['username']
-#         password = request.form['password']
-
-#         conn = get_db_connection()
-#         user = conn.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
-#         conn.close()
-
-#         if user and check_password_hash(user['password'], password):
-#             # Ensure user has a profile photo; fallback to default if missing
-#             # profile_photo = user['profile_photo'] if user['profile_photo'] else "/static/images/default.png"
-
-#             # Store user session
-#             session['user'] = {
-#                 "username": user['username'],
-#                 # "profile_photo": profile_photo
-#             }
-
-#             # Store login event
-#             conn = get_db_connection()
-#             conn.execute("INSERT INTO login_activity (username) VALUES (?)", (username,))
-#             conn.commit()
-#             conn.close()
-
-#             return render_template('personhome.html', sendname=user['username'])
-#         else:
-#             return render_template('login.html', error="Invalid Credentials")
-
-#     return render_template('login.html')
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-
-        conn = get_db_connection()
-        user = conn.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
-        conn.close()
-
-        if user and check_password_hash(user['password'], password):
-            session['user'] = username
+            print("🆕 New user! Creating record...")
+            org_ref.set({
+                "uid": uid,
+                "email": email,
+                "name":name,
+                "created_at": datetime.utcnow()
+            })
             
-            # Store login event
-            conn = get_db_connection()
-            conn.execute("INSERT INTO login_activity (username) VALUES (?)", (username,))
-            conn.commit()
-            conn.close()
+
+        
+        return jsonify({
+            "message": "Sign-in successful!"
             
-            # return redirect(url_for('personhome'))
-            return render_template('personhome.html', sendname=username)
+        }), 200
+
+    except Exception as e:
+        print("🔥 ERROR:", str(e))
+        return jsonify({"error": str(e)}), 500
+
+
+
+
+
+@app.route("/organisation")
+def organisation_page():
+    return render_template("organisation.html")
+
+
+
+
+@app.route("/login", methods=["POST"])
+def google_login():
+
+
+    try:
+        data = request.json
+        if not data:
+            return jsonify({"error": "No JSON data received"}), 400 
+        
+        uid = data.get("uid")
+        name = data.get("name")
+        email = data.get("email")
+        profile_picture = data.get("profile_picture")
+
+        if not uid or not email:
+            return jsonify({"error": "Invalid data"}), 400
+
+        user_ref = db.collection("users2").document(uid)
+        user_doc = user_ref.get()
+
+        if user_doc.exists:
+            user_data = user_doc.to_dict()
+            user_ref.update({"last_login": datetime.utcnow()})
         else:
-            return render_template('login.html', error="Invalid Credentials")
+            user_data = {
+                "uid": uid,
+                "name": name,
+                "email": email,
+                "profile_picture": profile_picture,
+                "greenbits": 5,  
+                "created_at": datetime.utcnow(),
+                "last_login": datetime.utcnow(),
+            }
+            user_ref.set(user_data)
 
-    return render_template('login.html')
+        session["user"] = {
+            "uid": uid,
+            "name": name,
+            "email": email,
+            "profile_picture": profile_picture,
+            "greenbits": user_data.get("greenbits", 5)
+        }   
 
+        
+        return jsonify(user_data), 200
 
-
-@app.route('/admin')
-def admin():
-    if "user" not in session or session["user"] != "admin":
-        return "Access Denied"
-
-    conn = get_db_connection()
-    logins = conn.execute("SELECT * FROM login_activity ORDER BY login_time DESC").fetchall()
-    conn.close()
-
-    conn2 = get_db_connection2()
-    logins2 = conn2.execute("SELECT * FROM login_activity_organisation ORDER BY login_time DESC").fetchall()
-    conn2.close()
+    except Exception as e:
+        print("Error:", str(e))
+        return jsonify({"error": "Server error", "message": str(e)}), 500
     
-    return render_template('admin.html', logins=logins, logins2=logins2)
+
+
+@app.route('/get_organizations', methods=['GET'])
+def get_organizations():
+    """Fetch all organizations from Firebase Firestore"""
+    organizations_ref = db.collection("organizations")  
+    docs = organizations_ref.stream()
+
+    org_list = []
+    for doc in docs:
+        data = doc.to_dict()
+        org_list.append({
+            "uid": data.get("uid"),
+            "name": data.get("name"),
+            "email": data.get("email"),
+            "image": data.get("image_url", "static/images/tree.jpg")  
+        })
+
+    return jsonify(org_list)  
+
+
+
+
+@app.route("/personhome")
+def person_home():
+
+    if "user" not in session:
+        return redirect(url_for("landing_page"))  
+
+    user_data = session["user"]
+    return render_template("personhome.html", user=user_data)
+
+
+
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -259,7 +271,7 @@ def predict():
         filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
         file.save(filepath)
 
-        # Make prediction
+        
         predicted_label, confidence = predict_e_waste(filepath)
         confidence = float(confidence)
         if confidence < 0.8:
@@ -268,6 +280,378 @@ def predict():
         handling_steps = E_WASTE_HANDLING_STEPS.get(predicted_label, ["No handling steps available."])        
 
         return jsonify({"prediction": predicted_label, "confidence": f"{confidence:.2f}","handling_steps": handling_steps})
+
+
+@app.route("/get_organization_requests", methods=["POST"])
+def get_organization_requests():
+    try:
+        data = request.json
+        org_id = data.get("org_id")  
+
+        if not org_id:
+            return jsonify({"error": "Organization ID is required"}), 400
+
+        products_ref = db.collection("products")
+        requests = []
+
+        
+        query = products_ref.stream()
+        
+        for doc in query:
+            product_data = doc.to_dict()
+            product_data["product_id"] = doc.id
+            org_list = product_data.get("organizations", [])
+
+            
+            if "all" in org_list or org_id in org_list:
+                requests.append(product_data)
+
+        return jsonify({"requests": requests}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+@app.route("/submit_product", methods=["POST"])
+def submit_product():
+    try:
+        data = request.json
+        doc_ref = db.collection("products").document()
+        product_data = {
+            "product_id": doc_ref.id,
+            "product_name": data["product_name"],
+            "product_age": data["product_age"],
+            "brand": data["brand"],
+            "model": data["model"],
+            "description": data["description"],
+            "user_id": data["user_id"],
+            "email": data["email"],
+            "organizations": data["organizations"],
+            "created_at": firestore.SERVER_TIMESTAMP
+        }
+
+       
+        db.collection("products").add(product_data)
+
+        return jsonify({"message": "Product submitted successfully!"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+
+@app.route("/get-ewaste/<org_id>", methods=["GET"])
+def get_ewaste(org_id):
+    products = db.collection("e_waste_products").stream()
+    result = []
+
+    for product in products:
+        product_data = product.to_dict()
+        if "selected_organizations" in product_data and (org_id in product_data["selected_organizations"] or "all" in product_data["selected_organizations"]):
+            result.append(product_data)
+
+    return jsonify(result)
+
+@app.route("/store_message", methods=["POST"])
+def store_message():
+    try:
+       
+        data = request.json
+        organization_name = data.get("organizationName")
+        organization_id = data.get("organizationId")
+        user_id = data.get("selectedUserId")
+        product_id = data.get("selectedProductId")
+        product_name = data.get("selectedProductName")
+        model=data.get("selectedModel")
+        message_type = data.get("messageType")  
+        message = data.get("message")
+        estimated_price = data.get("estimatedPrice")
+
+
+        doc_ref = db.collection("products").document(product_id)
+       
+        doc_ref.set({"status": "Accepted"}, merge=True)
+
+        
+        if not all([organization_id, user_id, message_type]):
+            return jsonify({"error": "Missing required fields"}), 400
+
+       
+        doc_ref = db.collection("individualMessage").document()
+        doc_ref.set({
+            "organizationName": organization_name,
+            "organizationId": organization_id,
+            "userId": user_id,
+            "productId": product_id,
+            "productName": product_name,
+            "model":model,
+            "messageType": message_type,
+            "message": message,
+            "estimatedPrice": estimated_price,
+            "timestamp": firestore.SERVER_TIMESTAMP
+        })
+
+        return jsonify({"success": True, "message": "Data stored successfully!"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/get_notifications", methods=["GET"])
+def get_notifications():
+    if "user" not in session:
+        return jsonify({"message": "User not logged in"}), 403
+
+    user = session["user"]
+    user_id = user["uid"]  # Get stored UID
+
+    print("Fetching notifications for user:", user_id)  # Debugging
+
+    messages_ref = db.collection("individualMessage")
+    messages_query = messages_ref.where("userId", "==", user_id).stream()
+
+    notifications = []
+    for message in messages_query:
+        data = message.to_dict()
+        notification_text = f"{data.get('messageType', 'Update')} - {data.get('productName', '')} {data.get('model', '')} product_id- {data.get('productId', '')} by {data.get('organizationId', '')}. Estimated price: {data.get('estimatedPrice', 'N/A')}."
+        notifications.append(notification_text)
+
+    if not notifications:
+        return jsonify({"message": "No new notifications"}), 200
+
+    return jsonify({"notifications": notifications}), 200
+
+
+
+@app.route("/submit_delivery_details", methods=["POST"])
+def submit_delivery_details():
+    try:
+        data = request.json
+
+        if not data:
+            return jsonify({"error": "No data received"}), 400
+
+       
+        delivery_ref = db.collection("delivery_location").document()
+        delivery_ref.set({
+            "user_id": data.get("user_id"),
+            "user_email": data.get("user_email"),
+            "user_contact": data.get("user_contact"),
+            "delivery_pincode": data.get("delivery_pincode"),
+            "delivery_location": data.get("delivery_location"),
+            "state": data.get("state"),
+            "product_id":data.get("product_id"),
+            "org_id":data.get("org_id"),
+            "created_at": datetime.utcnow()
+        })
+
+        return jsonify({"message": "Delivery details submitted successfully!"}), 200
+
+    except Exception as e:
+        print("Error:", str(e))
+        return jsonify({"error": "Server error", "message": str(e)}), 500
+
+
+@app.route("/get_organization_deliveries", methods=["POST"])
+def get_organization_deliveries():
+    try:
+        data = request.json
+        org_id = data.get("org_id")
+
+        if not org_id:
+            return jsonify({"error": "Missing organization ID"}), 400
+
+        deliveries_ref = db.collection("delivery_location")
+        query = deliveries_ref.where("org_id", "==", org_id).stream()
+
+        deliveries = []
+        for doc in query:
+            delivery_data = doc.to_dict()
+            deliveries.append({
+                "customer_id": delivery_data.get("user_id"),
+                "customer_mail": delivery_data.get("user_email"),
+                "customer_contact_no": delivery_data.get("user_contact"),
+                "product_id": delivery_data.get("product_id"),
+                "location": delivery_data.get("delivery_location"),
+                "pincode": delivery_data.get("delivery_pincode"),
+                "state": delivery_data.get("state")
+            })
+
+        return jsonify({"deliveries": deliveries}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+
+
+
+
+# HF_API_URL = "https://api-inference.huggingface.co/models/google/gemma-2b"
+HF_API_URL = os.getenv("HF_URL")
+ 
+HF_API_TOKEN = os.getenv("HF_API_KEY")  
+HEADERS = {"Authorization": f"Bearer {HF_API_TOKEN}"}
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+@app.route("/analyze", methods=["POST"])
+def analyze():
+    user_text = request.form.get("text")
+    if not user_text:
+        return jsonify({"error": "No input provided"}), 400
+
+   
+    prompt = f"""
+You are an expert in e-waste sustainability.  
+Analyze the query and provide a **structured disposal guide**.  
+
+### **User Query:**  
+"{user_text}"  
+
+### **Response Format (Follow this format exactly):**  
+Item Type: [Detected electronic item]  
+Potential Hazards: [List potential disposal risks]  
+Recycling Steps:  
+1. [Step 1]  
+2. [Step 2]  
+3. [Step 3]  
+ 
+
+### **Response:**  
+"""
+
+    payload = {
+        "inputs": prompt,
+        "parameters": {
+            "max_new_tokens": 300,
+            "temperature": 0.5,  
+            "top_p": 0.85,
+            "repetition_penalty": 1.2  
+        }
+    }
+
+    try:
+        response = requests.post(HF_API_URL, headers=HEADERS, json=payload)
+        response.raise_for_status()  
+        response_data = response.json()
+
+       
+        if isinstance(response_data, list) and response_data:
+            suggestion = response_data[0].get("generated_text", "No valid response.")
+        elif isinstance(response_data, dict):
+            suggestion = response_data.get("generated_text", "No valid response.")
+        else:
+            suggestion = "Unexpected response format."
+
+        return jsonify({"suggestion": suggestion.strip()})
+
+    except requests.exceptions.RequestException as req_err:
+        return jsonify({"error": f"API request failed: {str(req_err)}"}), 500
+    except Exception as e:
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+
+
+@app.route("/beforePurchase")
+def beforePurchase():
+    return render_template('beforePurchase.html')
+
+@app.route("/nearestcenters")
+def nearestcenters():
+    return render_template('nearestcenters.html')
+
+
+
+YOUTUBE_API_KEY = os.getenv("YT_API_KEY")
+youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=YOUTUBE_API_KEY)
+
+
+
+
+
+
+
+CHANNEL_NAMES = ["techbar", "trakintech", "technicalguruji", "technoruhez"]
+
+def fetch_youtube_videos(query):
+    selected_videos = []
+
+    for channel in CHANNEL_NAMES:
+        modified_query = f"{query} {channel}"  
+
+        request = youtube.search().list(
+            part="snippet",
+            q=modified_query,
+            maxResults=2,  
+            type="video",
+            order="relevance"  
+        )
+        response = request.execute()
+
+       
+        for item in response.get("items", []):
+            video_data = {
+                "title": item["snippet"]["title"],
+                "video_url": f"https://www.youtube.com/watch?v={item['id']['videoId']}",
+                "thumbnail": item["snippet"]["thumbnails"]["high"]["url"]
+            }
+            selected_videos.append(video_data)
+
+    return selected_videos
+
+@app.route("/search", methods=["GET"])
+def search_videos():
+    query = request.args.get("query", "")
+    if not query:
+        return jsonify({"error": "Query parameter is required"}), 400
+
+    videos = fetch_youtube_videos(query)
+    return jsonify({"videos": videos}) 
+
+
+
+
+@app.route("/Search", methods=["POST"])
+def search():
+    data = request.json
+    state_name = data.get("state", "").strip().lower()
+
+    if not state_name:
+        return jsonify({"error": "State name is required"}), 400
+
+    
+    matching_row = df[df["State"].str.lower() == state_name.lower()]
+    e_waste_centers = matching_row["E-Waste Collection Centers"].values[0] if not matching_row.empty else "No data found"
+
+    
+    model = genai.GenerativeModel("gemini-1.5-flash")
+ 
+    prompt = f"""Provide a list of 5 well-known e-waste collection and recycling centers in {state_name}, India. 
+If exact locations are unavailable, generate names of reputed e-waste centers based on general knowledge of India's e-waste recycling industry.  
+Ensure the response is formatted in a numbered list and does not include disclaimers about real-time data limitations.
+"""
+
+
+    response = model.generate_content(prompt)
+    gemini_response = response.text if response and response.text else "No response from AI."
+
+    return jsonify({
+        "state": state_name,
+        "e_waste_centers": e_waste_centers,
+        "gemini_response": gemini_response
+    })
+
+
+
+
+SEARCH_ENGINE_ID = os.getenv("ENGINE_ID")  
+
+@app.route("/compare", methods=["GET", "POST"])
+def compare():
+    query = request.form.get("query") if request.method == "POST" else ""
+    return render_template("compare.html", query=query, search_engine_id=SEARCH_ENGINE_ID)    
 
 
 if __name__ == '__main__':
