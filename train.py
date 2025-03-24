@@ -7,7 +7,7 @@ from tensorflow.keras.layers import Dense, Dropout, GlobalAveragePooling2D
 from tensorflow.keras.models import Model
 
 # Define dataset paths
-dataset_dir = "C:/Users/user/Desktop/GreenBits/modified-dataset"  # Update this with the actual dataset path
+dataset_dir = "C:/Users/user/Desktop/GreenBit/modified-dataset"  # Update this with the actual dataset path
 
 train_dir = os.path.join(dataset_dir, "train")
 val_dir = os.path.join(dataset_dir, "val")

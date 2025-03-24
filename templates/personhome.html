@@ -113,38 +113,44 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>GreenBits - E-Waste Management</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: black;
-            
+            /* background: linear-gradient(to right,black, blue); */
+            background: linear-gradient(to right, #ffeb3bd9, #178d1c);
+
         }
+
         header {
-            background: #4CAF50;
-            color: white;
+            /* background: #4CAF50; */
+            color: rgb(9, 8, 8);
             padding: 15px;
             text-align: center;
             font-size: 24px;
             font-family: cursive;
         }
+
         .container {
             /* width: 90%; */
             margin-top: 33px;
             overflow: hidden;
             padding: 20px;
-            background:#7fb83de6;
-                        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            /* background:#7fb83de6; */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             border-color: black;
             border-style: solid;
         }
+
         .hero {
             text-align: center;
             padding: 50px;
@@ -152,36 +158,47 @@
             color: rgb(247, 241, 241);
             border-radius: 10px;
         }
+
         .hero h1 {
             margin: 0;
             font-size: 36px;
+            color: black;
         }
+
         .hero p {
             font-size: 18px;
+            color: black;
         }
+
         .features {
             display: flex;
             justify-content: space-between;
             /* background: url('/static/images/bck2.jpg') no-repeat center center/cover; */
             margin-top: 30px;
         }
+
         .feature-box {
             flex: 1;
-    padding: 20px;
-    font-size: 17px;
-    font-family: cursive;
-    background: #e8f5e9;
-    text-align: center;
-    margin: 10px;
-    background: url(/static/images/bck2.jpg) no-repeat center center / cover;
-    border-radius: 10px;
-    background-attachment: fixed;
+            padding: 20px;
+            font-size: 17px;
+            font-family: cursive;
+            background: #e8f5e9;
+            text-align: center;
+            margin: 10px;
+            /* background: url(/static/images/bck2.jpg) no-repeat center center / cover; */
+            border-radius: 10px;
+            background-attachment: fixed;
         }
-        .feature-box:hover{
+        .feature-box h2{
+            font-weight: 900;
+        }
+        .feature-box:hover {
             cursor: pointer;
             border-color: black;
             border-style: solid;
+            background-color: #28a745;
         }
+
         .footer {
             text-align: center;
             padding: 20px;
@@ -190,25 +207,25 @@
             margin-top: 20px;
         }
 
-        #username{
+        #username {
             color: black;
-    font-style: italic;
-    font-variant: all-small-caps;
-    font-weight: 700;
-    text-decoration: overline;
+            font-style: italic;
+            font-variant: all-small-caps;
+            font-weight: 700;
+            text-decoration: overline;
         }
 
-            .ai-image-process h1{
-                font-size: 2.5rem;
-                color: darkseagreen;
-            }
+        .ai-image-process h1 {
+            font-size: 2.5rem;
+            color: darkseagreen;
+        }
 
         .ai-image-process {
-            background-image:url('/static/images/tree.jpg');
+            background-image: url('/static/images/tree.jpg');
             background-size: cover;
             background-repeat: no-repeat;
             color: antiquewhite;
-            border-style:solid;
+            border-style: solid;
             border-color: #4CAF50;
             font-family: monospace;
             height: 900px;
@@ -231,7 +248,7 @@
             padding: 10px;
             border: none;
             border-radius: 8px;
-            background:transparent;
+            background: transparent;
             color: black;
             cursor: pointer;
         }
@@ -261,7 +278,8 @@
 
         #uploaded-image {
             display: none;
-            width: 150px;  /* Adjust as needed */
+            width: 150px;
+            /* Adjust as needed */
             height: 150px;
             border-radius: 10px;
             object-fit: cover;
@@ -273,25 +291,500 @@
             transform: scale(1.05);
             transition: 0.3s;
         }
-        .reward-back{
+
+        .reward-back {
             /* background-image: url('/static/images/re.jpg'); */
             background: radial-gradient(circle, #FF5733, #3f51b5c9);
             border-radius: 30px;
         }
 
-        .me{
+        .me {
             font-size: xxx-large;
-    font-weight: 200;
-    font-family: cursive;
-    color: #FFEB3B;
-    padding-left: 38px;
-    font-style: italic;
+            font-weight: 200;
+            font-family: cursive;
+            color: #FFEB3B;
+            padding-left: 38px;
+            font-style: italic;
+        }
+
+        .walleticon {
+            width: 70px;
+        }
+
+        .icon {
+            font-size: 2.1rem;
+            color: seagreen;
+            font-weight: 600;
+            font-family: monospace;
+        }
+
+        /* .wallet-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        } */
+        .wallet-info {
+            display: none;
+            /* Initially hidden */
+            position: absolute;
+            top: 60px;
+            /* Adjust according to header height */
+            right: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            z-index: 1000;
+        }
+
+        .wallet-info p {
+            font-size: smaller;
+        }
+
+        .redeem-button {
+            background-color: green;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            background-color: black;
+            margin-bottom: 3rem;
+
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .feature-container {
+            background-color: black;
+        }
+
+        .feature-container p {
+
+            color: white;
+            padding: 10px;
+            font-family: cursive;
+        }
+
+        .card-content {
+            padding: 15px;
+            text-align: center;
+            background-color: white;
+            height: 16rem;
+            font-weight: 700;
+        }
+
+        .card-content h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .card-content p {
+            color: gray;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .card-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+
+
+        .upload-container {
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            background-color: white;
+        }
+
+        .upload-container input,
+        .upload-container textarea,
+        .upload-container select,
+        .upload-container button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* .org-selection {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .org-list {
+            margin-top: 10px;
+        }
+
+        .org-list label {
+            display: block;
+        } */
+
+
+
+        .combine-user {
+            display: flex;
+            flex-direction: column;
+            font-size: 15px;
+            align-items: baseline;
+            font-weight: 700;
+            font-family: monospace;
+        }
+
+
+        .org-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            /* Space between checkbox and text */
+            padding: 5px 0;
+        }
+
+        .org-checkbox {
+            transform: scale(1.2);
+            /* Make checkbox slightly bigger */
+            cursor: pointer;
+        }
+
+        .org-name {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* 
+#notification-menu {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #f8f8f8;
+            padding: 10px;
+            border-radius: 5px;
+            width: 300px;
+            display: none;
+        }
+        .notification {
+            padding: 10px;
+            margin: 5px 0;
+            background: #e0ffe0;
+            border-left: 5px solid #4CAF50;
+        } */
+
+
+        #notification-menu {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 50%;
+            max-width: 400px;
+            z-index: 1000;
+            display: none;
+            /* Hidden by default */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .notification {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .notification:last-child {
+            border-bottom: none;
+        }
+
+        #close-btn {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background: red;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #notification-btn {
+            /* position: fixed; */
+            /* top: 20px; */
+            /* right: 20px; */
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: black;
+            transition: 0.3s;
+        }
+
+        #notification-btn:hover {
+            color: red;
+            transform: scale(1.2);
+        }
+
+
+
+        #delivery-form-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            /* Adjust width as needed */
+            max-width: 400px;
+            /* Prevents it from getting too wide */
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            /* Prevents overflowing */
+        }
+
+        .scrollable-form {
+            max-height: 60vh;
+            /* Limits height */
+            overflow-y: auto;
+            /* Enables scrolling */
+            padding-right: 10px;
+            /* Space for scrollbar */
+        }
+
+        #delivery-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #delivery-form label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #delivery-form input,
+        #delivery-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #delivery-form button {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #delivery-form button:hover {
+            background-color: #0056b3;
+        }
+
+
+        .container2 {
+            /* max-width: 600px; */
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            overflow: scroll;
+            height: 30rem;
+            width: 95%;
+            margin-bottom: -1px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        p {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .note-point p {
+            padding: 25px;
+            margin-top: -1px;
+            color: black;
+            font-size: medium;
+            font-weight: 600;
+            font-family: math;
+        }
+
+        .note-point span {
+            color: red;
         }
     </style>
 </head>
+
 <body>
-    <header>
+    <!-- <header>
         Welcome to GreenBits, <span id="username">{{sendname}}</span>
+    </header> -->
+
+    <header
+        style="display: flex; justify-content: space-between; align-items: center; padding: 10px; color: rgb(11, 11, 11);">
+        <!-- Left: Welcome Message -->
+        <div class="icon">
+            GreenBits
+        </div>
+
+        <!-- <button onclick="toggleNotifications()">🔔 Notifications</button>
+        <div id="notification-menu">
+            <h3>Notifications</h3>
+            <div id="notifications"></div>
+        </div> -->
+
+        <div class="noti">
+
+            <button id="notification-btn">
+                🔔
+            </button>
+
+            <div id="notification-menu">
+                <h3>Notifications</h3>
+                <div id="notifications-content"></div>
+                <button id="close-btn" onclick="closeNotifications()">Close</button>
+            </div>
+
+        </div>
+
+
+
+        <div id="delivery-form-container" style="display: none;">
+            <h3>Enter Delivery Details</h3>
+            <div class="scrollable-form">
+                <form id="delivery-form">
+                    <label>User ID:</label>
+                    <input type="text" id="delivery-user-id" required>
+
+                    <label>Email:</label>
+                    <input type="email" id="delivery-user-email" required>
+
+                    <label>Contact Number:</label>
+                    <input type="text" id="delivery-user-contact" required>
+
+
+                    <label>Product Id:</label>
+                    <input type="text" id="product_id" required>
+
+
+                    <label>Organisation Id:</label>
+                    <input type="text" id="organisation_id" required>
+
+                    <label>Delivery Pincode:</label>
+                    <input type="text" id="delivery-pincode" required>
+
+
+
+                    <label>Full Address:</label>
+                    <textarea id="delivery-location" required></textarea>
+
+                    <label>State:</label>
+                    <input type="text" id="delivery-state" required>
+
+                    <button type="submit">Submit</button>
+                    <button type="button" onclick="closeDeliveryForm()">Cancel</button>
+                </form>
+            </div>
+
+        </div>
+
+
+        
+        <!-- Right: Wallet, User Info, Logout -->
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <!-- Wallet Icon -->
+
+            <!-- <img class="walleticon" src="static/images/wallet.png" alt="">
+
+            <div class="wallet-info" id="wallet-info">
+                <p>Green Bits: <span id="greenbits">{{ user.greenbits }}</span></p>
+                <button class="redeem-button">Redeem</button>
+            </div> -->
+
+            <img class="walleticon" src="static/images/wallet.png" alt="Wallet Icon" onclick="toggleWalletInfo()"
+                style="cursor: pointer;">
+
+            <!-- Wallet Info (Initially Hidden) -->
+            <div class="wallet-info" id="wallet-info" style="display: none;">
+                <p>Current GreenBits in your wallet: <span id="greenbits">{{ user.greenbits }}</span></p>
+                <button class="redeem-button">Redeem</button>
+            </div>
+
+            <!-- User Name -->
+            <div class="combine-user">
+                <span id="user-name">{{ user.name }}</span>
+                <div class="user-id">User_ID: {{user.uid}}</div>
+            </div>
+
+
+            <!-- Profile Picture -->
+            <img id="user-photo" src="{{ user.profile_picture }}" alt="User Photo"
+                style="width: 40px; height: 40px; border-radius: 50%;">
+
+            <!-- Logout Button -->
+            <button onclick="logout()"
+                style="padding: 5px 10px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Logout
+            </button>
+        </div>
     </header>
 
     <div class="container">
@@ -302,16 +795,25 @@
 
         <div class="features">
             <div class="feature-box">
-                <h2>Easy E-Waste Disposal</h2>
+                <a href="{{ url_for('nearestcenters') }}">
+                <h2>Easy E-Waste Disposal Centers Near you</h2>
                 <p>Find nearby e-waste collection centers with just a click.</p>
+            </a>
             </div>
+            
+                <div class="feature-box">
+                    
+                    <a href="{{ url_for('beforePurchase') }}">
+                        <h2>Choose the best Products before Purchase &#9654;</h2>
+                    <p>Search your product with budget and get the guidance from the best Techie in the world.</p>
+                    </a>
+                </div>
+            
             <div class="feature-box">
-                <h2>Track Your Contributions</h2>
-                <p>Monitor your recycling impact and get rewarded.</p>
-            </div>
-            <div class="feature-box">
-                <h2>Learn & Educate</h2>
-                <p>Explore resources on sustainable practices and e-waste management.</p>
+                <a href="{{ url_for('compare') }}">
+                <h2>Search & Compare</h2>
+                <p>Search among various electronic brands and choose wisely, this would help you to select the best product for your purchase.</p>
+            </a>
             </div>
         </div>
     </div>
@@ -330,53 +832,153 @@
     </div>
 
 
-    <div class="reward-back">
-        <h1 class="me">Earn Your Rewards!</h1>
-    <div class="max-w-4xl mx-auto p-6 mt-10">
-        <!-- How to Earn GreenBits -->
-        <div class="bg-white p-6 rounded-lg shadow-lg">
-            <h2 class="text-2xl font-bold text-green-600">🌱 How to Earn GreenBits</h2>
-            <p class="text-gray-600 mt-2">Dispose of your e-waste responsibly and earn GreenBits based on the product size:</p>
-            <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="card bg-green-100 p-4 rounded-lg text-center">
-                    <h3 class="text-lg font-semibold">📱 Small Product</h3>
-                    <p class="text-gray-700">(200g - 1kg)</p>
-                    <p class="text-xl font-bold text-green-700">+2 GreenBits</p>
-                </div>
-                <div class="card bg-green-200 p-4 rounded-lg text-center">
-                    <h3 class="text-lg font-semibold">💻 Medium Product</h3>
-                    <p class="text-gray-700">(1kg - 10kg)</p>
-                    <p class="text-xl font-bold text-green-700">+5 GreenBits</p>
-                </div>
-                <div class="card bg-green-300 p-4 rounded-lg text-center">
-                    <h3 class="text-lg font-semibold">📺 Large Product</h3>
-                    <p class="text-gray-700">(10kg+)</p>
-                    <p class="text-xl font-bold text-green-700">+10 GreenBits</p>
-                </div>
-            </div>
-            <div class="mt-6 p-4 bg-green-50 border-l-4 border-green-400">
-                <h3 class="text-lg font-semibold text-green-700">💡 Earn More GreenBits</h3>
-                <p class="text-gray-700">✔ Continuous 6 months of successful disposal earns <span class="font-bold">+60 GreenBits</span></p>
-                <p class="text-gray-700">✔ Add new users with your invite code and earn <span class="font-bold">+2 GreenBits</span> per user</p>
+
+    <!-- Gemma Portion -->
+    <div class="container2">
+        <h1>E-Waste Sustainability Advisor</h1>
+        <h5>Ask gemma about how you dispose your e-waste</h5>
+        <form id="analyzeForm">
+            <textarea name="text" id="description"
+                placeholder="Enter your prompt -> I have a dead phone, with no battery life, how can i dispose it ?"
+                required></textarea>
+            <button type="submit">Get Suggestion</button>
+        </form>
+        <p id="response"></p>
+    </div>
+
+    <div class="note-point">
+        <p> <span>Note:</span> We have fine-tuned the model in Google Colab, leveraging their support for T4 GPUs and
+            high RAM availability. The fine-tuned model has been uploaded to Hugging Face. However, due to GPU
+            unavailability and limited RAM on this system, we are unable to integrate the fine-tuned model with the
+            current setup.
+
+            For a detailed source and an example of the fine-tuned model, please refer to the link attached below.
+
+            A big thanks to Google Colab for providing the necessary GPU and RAM resources for training! Looking Forward
+            to get some resources.<br><a href="/static/gemma-tuned.pdf" target="_blank">📄 Click here to view.</a></p>
+        <!-- <p><a href="/static/gemma-tuned.pdf" target="_blank">📄 Click here to view.</a></p> -->
+    </div>
+
+
+    <h1 style="text-align: center;font-size: xx-large;font-family: monospace;">Prefer your Organisation</h1>
+    <div class="feature-container" id="market-insights">
+        <p>Please fill the form below and choose your organisation to whom you want your product to sell. Once you
+            filled the form, if the organisation approve the product you will be mailed/notified the estimated price
+            within 24 hrs. PLEASE dont setback, we will bring more organisations at the earliest!</p>
+        <div class="card-grid" id="org-cards"></div>
+    </div>
+
+
+
+
+    <div class="upload-container">
+        <h2>Upload E-Waste Product</h2>
+
+
+        <label for="product-name">Product Type:</label>
+        <input type="text" id="product-name" placeholder="Enter product type- phone/laptop/speaker/micro-oven/tv">
+
+        <label for="product-age">Product Age (in years):</label>
+        <input type="number" id="product-age" placeholder="Enter product age">
+
+        <label for="product-brand">Brand:</label>
+        <input type="text" id="product-brand" placeholder="Enter brand name">
+
+        <label for="product-model">Model Name/Number:</label>
+        <input type="text" id="product-model" placeholder="Enter model name">
+
+        <label for="product-description">Description:</label>
+        <textarea id="product-description" placeholder="Enter product details"></textarea>
+
+        <label for="user-id">Your User_ID:</label>
+        <input type="text" id="user-id" placeholder="Enter your user id">
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" placeholder="Enter active e-mail">
+
+        <!-- Select Option -->
+        <label>Send to:</label>
+        <select id="send-option" onchange="toggleOrgSelection()">
+            <option value="all">All Organizations</option>
+            <option value="selected">Selected Organizations</option>
+        </select>
+
+        <!-- Organization Selection -->
+        <div id="org-selection" class="org-selection">
+            <h3>Select Organizations:</h3>
+            <!-- <div class="org-list">
+                <label><input type="checkbox" class="org-checkbox" value="org1"> Org1 - We collect e-waste.</label>
+                <label><input type="checkbox" class="org-checkbox" value="org2"> Org2 - We collect e-waste.</label>
+                <label><input type="checkbox" class="org-checkbox" value="org3"> Org3 - We collect e-waste.</label>
+                <label><input type="checkbox" class="org-checkbox" value="org4"> Org4 - We collect e-waste.</label>
+            </div> -->
+
+            <div id="org-list" class="org-list">
+                <!-- Organizations will be dynamically inserted here -->
             </div>
         </div>
 
-        <!-- How to Use GreenBits -->
-        <div class="bg-white p-6 rounded-lg shadow-lg mt-8">
-            <h2 class="text-2xl font-bold text-blue-600">💰 How to Use GreenBits</h2>
-            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="card bg-blue-100 p-4 rounded-lg text-center">
-                    <h3 class="text-lg font-semibold">🛍️ Shop with GreenBits</h3>
-                    <p class="text-gray-700">Use your GreenBits to buy eco-friendly products & exclusive merchandise.</p>
+        <!-- Submit Button -->
+        <button onclick="submitEwaste()">Send</button>
+    </div>
+
+
+    </div>
+
+
+
+    <div class="reward-back">
+        <h1 class="me">Earn Your Rewards!</h1>
+        <div class="max-w-4xl mx-auto p-6 mt-10">
+            <!-- How to Earn GreenBits -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-bold text-green-600">🌱 How to Earn GreenBits</h2>
+                <p class="text-gray-600 mt-2">Dispose of your e-waste responsibly and earn GreenBits based on the
+                    product size:</p>
+                <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="card bg-green-100 p-4 rounded-lg text-center">
+                        <h3 class="text-lg font-semibold">📱 Small Product</h3>
+                        <p class="text-gray-700">(200g - 1kg)</p>
+                        <p class="text-xl font-bold text-green-700">+2 GreenBits</p>
+                    </div>
+                    <div class="card bg-green-200 p-4 rounded-lg text-center">
+                        <h3 class="text-lg font-semibold">💻 Medium Product</h3>
+                        <p class="text-gray-700">(1kg - 10kg)</p>
+                        <p class="text-xl font-bold text-green-700">+5 GreenBits</p>
+                    </div>
+                    <div class="card bg-green-300 p-4 rounded-lg text-center">
+                        <h3 class="text-lg font-semibold">📺 Large Product</h3>
+                        <p class="text-gray-700">(10kg+)</p>
+                        <p class="text-xl font-bold text-green-700">+10 GreenBits</p>
+                    </div>
                 </div>
-                <div class="card bg-blue-200 p-4 rounded-lg text-center">
-                    <h3 class="text-lg font-semibold">🔖 Discount on Electronics</h3>
-                    <p class="text-gray-700">Every <span class="font-bold">60 GreenBits</span> gives you <span class="text-green-700 font-bold">₹12</span> off on your next purchase!</p>
+                <div class="mt-6 p-4 bg-green-50 border-l-4 border-green-400">
+                    <h3 class="text-lg font-semibold text-green-700">💡 Earn More GreenBits</h3>
+                    <p class="text-gray-700">✔ Continuous 6 months of successful disposal earns <span
+                            class="font-bold">+60 GreenBits</span></p>
+                    <p class="text-gray-700">✔ Add new users with your invite code and earn <span class="font-bold">+2
+                            GreenBits</span> per user</p>
+                </div>
+            </div>
+
+            <!-- How to Use GreenBits -->
+            <div class="bg-white p-6 rounded-lg shadow-lg mt-8">
+                <h2 class="text-2xl font-bold text-blue-600">💰 How to Use GreenBits</h2>
+                <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="card bg-blue-100 p-4 rounded-lg text-center">
+                        <h3 class="text-lg font-semibold">🛍️ Shop with GreenBits</h3>
+                        <p class="text-gray-700">Use your GreenBits to buy eco-friendly products & exclusive
+                            merchandise.</p>
+                    </div>
+                    <div class="card bg-blue-200 p-4 rounded-lg text-center">
+                        <h3 class="text-lg font-semibold">🔖 Discount on Electronics</h3>
+                        <p class="text-gray-700">Every <span class="font-bold">60 GreenBits</span> gives you <span
+                                class="text-green-700 font-bold">₹12</span> off on your next purchase!</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
     <div class="footer">
         &copy; 2025 GreenBits | Making E-Waste Management Smarter
@@ -384,7 +986,238 @@
 
     <script>
 
-document.getElementById("file-input").addEventListener("change", function (event) {
+
+
+        document.getElementById("analyzeForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent form from refreshing page
+
+            let description = document.getElementById("description").value;
+            let responseElement = document.getElementById("response");
+
+            if (!description) {
+                responseElement.innerText = "Please enter a product description!";
+                return;
+            }
+
+            responseElement.innerText = "Generating suggestion...";
+
+            fetch("/analyze", {
+                method: "POST",
+                body: new FormData(this)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.suggestion) {
+                        responseElement.innerText = "Sustainability Suggestion: " + data.suggestion;
+                    } else {
+                        responseElement.innerText = "Error: " + data.error;
+                    }
+                })
+                .catch(error => {
+                    responseElement.innerText = "Failed to fetch suggestion!";
+                    console.error("Error:", error);
+                });
+        });
+
+
+
+        // function toggleNotifications() {
+        //             const menu = document.getElementById("notification-menu");
+        //             menu.style.display = menu.style.display === "block" ? "none" : "block";
+        //         }
+
+        //         async function fetchNotifications() {
+
+
+
+        //             let response = await fetch("/get_notifications", {
+        //         method: "GET",
+        //         credentials: "include",  // 🔥 Ensures session cookies are sent
+        //     });
+
+        //     let data = await response.json();
+        //     console.log("Notifications Response:", data);  // 🔴 Debugging: Check API response
+
+        //     let menu = document.getElementById("notification-menu");
+        //     menu.innerHTML = "";
+
+        //     if (data.notifications && data.notifications.length > 0) {
+        //         data.notifications.forEach(msg => {
+        //             let div = document.createElement("div");
+        //             div.classList.add("notification");
+        //             div.textContent = msg;
+        //             menu.appendChild(div);
+        //         });
+        //         menu.style.display = "block";
+        //     } else {
+        //         menu.innerHTML = "<div class='notification'>No new notifications</div>";
+        //     }
+        //         }
+
+        //         window.onload = fetchNotifications;
+
+        document.getElementById("notification-btn").addEventListener("click", fetchNotifications);
+
+
+        async function fetchNotifications() {
+            let response = await fetch("/get_notifications", {
+                method: "GET",
+                credentials: "include",
+            });
+
+            let data = await response.json();
+            console.log("Notifications Response:", data);
+
+            let menu = document.getElementById("notification-menu");
+            let content = document.getElementById("notifications-content");
+            content.innerHTML = "";  // Clear previous notifications
+
+            if (data.notifications && data.notifications.length > 0) {
+                data.notifications.forEach(msg => {
+                    let div = document.createElement("div");
+                    div.classList.add("notification");
+                    // div.textContent = msg;
+                    div.innerHTML = `
+                <p>${msg}</p>
+                <button onclick="openDeliveryForm()">Accept Offer</button>
+                <button onclick="cancelSelling()">Cancel Selling</button>
+            `;
+                    content.appendChild(div);
+                });
+
+                menu.style.display = "block";
+            } else {
+                content.innerHTML = "<div class='notification'>No new notifications</div>";
+                menu.style.display = "block";
+            }
+        }
+
+
+
+
+
+        function openDeliveryForm() {
+            document.getElementById("notification-menu").style.display = "none";
+            document.getElementById("delivery-form-container").style.display = "block";
+        }
+
+        function closeDeliveryForm() {
+            document.getElementById("delivery-form-container").style.display = "none";
+        }
+
+        document.getElementById("delivery-form").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            let deliveryData = {
+                user_id: document.getElementById("delivery-user-id").value,
+                user_email: document.getElementById("delivery-user-email").value,
+                user_contact: document.getElementById("delivery-user-contact").value,
+                delivery_pincode: document.getElementById("delivery-pincode").value,
+                delivery_location: document.getElementById("delivery-location").value,
+                state: document.getElementById("delivery-state").value,
+                product_id: document.getElementById("product_id").value,
+                org_id: document.getElementById("organisation_id").value,
+            };
+
+            fetch("/submit_delivery_details", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(deliveryData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    closeDeliveryForm();
+                })
+                .catch(error => console.error("Error submitting delivery details:", error));
+        });
+
+        // Cancel Selling Function
+        async function cancelSelling() {
+            alert("You have canceled the selling offer.");
+        }
+
+
+
+
+
+        // Function to close the notification popup
+        function closeNotifications() {
+            document.getElementById("notification-menu").style.display = "none";
+        }
+
+
+
+        function toggleWalletInfo() {
+            var walletInfo = document.getElementById("wallet-info");
+            walletInfo.style.display = (walletInfo.style.display === "block") ? "none" : "block";
+        }
+
+        // Hide Wallet Info When Clicking Outside
+        document.addEventListener("click", function (event) {
+            var walletInfo = document.getElementById("wallet-info");
+            var walletIcon = document.querySelector(".walleticon");
+
+            if (walletInfo.style.display === "block" &&
+                event.target !== walletIcon &&
+                !walletInfo.contains(event.target)) {
+                walletInfo.style.display = "none";
+            }
+        });
+
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("/get_organizations")
+                .then(response => response.json())
+                .then(data => {
+                    console.log("📢 Fetched Organizations:", data);
+
+                    const container = document.querySelector(".card-grid"); // Target the card container
+                    container.innerHTML = ""; // Clear existing content
+
+                    data.forEach(org => {
+                        const card = document.createElement("div");
+                        card.classList.add("card");
+                        card.innerHTML = `
+                    <div class="card-content">
+                        <h2>Organisation: ${org.name}</h2>
+                        <p>Email: ${org.email}</p>
+                    </div>
+                 `;
+                        container.appendChild(card);
+                    });
+
+
+                    const orgList = document.querySelector("#org-list"); // Target the checkbox container
+                    orgList.innerHTML = ""; // Clear existing content
+
+                    data.forEach(org => {
+                        const checkbox = document.createElement("label");
+                        checkbox.innerHTML = `
+                    <input type="checkbox" class="org-checkbox" value="${org.uid}">
+                    ${org.name}
+                `;
+                        orgList.appendChild(checkbox);
+                    });
+
+                })
+                .catch(error => console.error("❌ Error fetching organizations:", error));
+        });
+
+
+
+        function logout() {
+            fetch("http://127.0.0.1:5000/logout", {
+                method: "POST",
+                credentials: "include"
+            }).then(() => {
+                window.location.href = "/"; // Redirect to login page
+            }).catch(error => console.error("Logout Error:", error));
+        }
+
+
+        document.getElementById("file-input").addEventListener("change", function (event) {
             let file = event.target.files[0];
             if (file) {
                 let reader = new FileReader();
@@ -408,14 +1241,14 @@ document.getElementById("file-input").addEventListener("change", function (event
             let stepsDiv = document.getElementById("handling-steps");
 
             if (result.prediction === "Can't Determine") {
-            document.getElementById("result").innerHTML = `<h3>Prediction: Can't Determine</h3>`;
-            stepsDiv.style.display = "none";
-        } else {
-            document.getElementById("result").innerHTML = 
-                `<h3>Product: ${result.prediction}</h3>
+                document.getElementById("result").innerHTML = `<h3>Prediction: Can't Determine</h3>`;
+                stepsDiv.style.display = "none";
+            } else {
+                document.getElementById("result").innerHTML =
+                    `<h3>Product: ${result.prediction}</h3>
                  <p>Confidence: ${result.confidence}</p>`;
 
-                 let stepsHtml = `<h3>How to Manage This Product?</h3><ul>`;
+                let stepsHtml = `<h3>How to Manage This Product?</h3><ul>`;
                 result.handling_steps.forEach(step => {
                     stepsHtml += `<li>${step}</li>`;
                 });
@@ -423,7 +1256,7 @@ document.getElementById("file-input").addEventListener("change", function (event
 
                 stepsDiv.innerHTML = stepsHtml;
                 stepsDiv.style.display = "block";
-        }
+            }
 
 
 
@@ -431,8 +1264,139 @@ document.getElementById("file-input").addEventListener("change", function (event
             //     `<h3>Prediction: ${result.prediction}</h3>
             //      <p>Confidence: ${result.confidence}</p>`;
         };
+
+
+
+
+
+
+
+
+        // function toggleOrgSelection() {
+        //     var sendOption = document.getElementById("send-option").value;
+        //     var orgSelection = document.getElementById("org-selection");
+
+        //     if (sendOption === "selected") {
+        //         orgSelection.style.display = "block";
+        //     } else {
+        //         orgSelection.style.display = "none";
+        //     }
+        // }
+
+        // function submitEwaste() {
+        //     var image = document.getElementById("product-image").files[0];
+        //     var name = document.getElementById("product-name").value;
+        //     var age = document.getElementById("product-age").value;
+        //     var brand = document.getElementById("product-brand").value;
+        //     var model = document.getElementById("product-model").value;
+        //     var description = document.getElementById("product-description").value;
+        //     var sendOption = document.getElementById("send-option").value;
+        //     var selectedOrgs = [];
+
+        //     if (sendOption === "selected") {
+        //         var checkboxes = document.querySelectorAll(".org-checkbox:checked");
+        //         checkboxes.forEach(checkbox => selectedOrgs.push(checkbox.value));
+
+        //         if (selectedOrgs.length === 0) {
+        //             alert("Please select at least one organization.");
+        //             return;
+        //         }
+        //     }
+
+        //     if (!name || !age || !brand || !model || !description || !image) {
+        //         alert("Please fill all fields and upload an image.");
+        //         return;
+        //     }
+
+        //     var formData = new FormData();
+        //     formData.append("image", image);
+        //     formData.append("name", name);
+        //     formData.append("age", age);
+        //     formData.append("brand", brand);
+        //     formData.append("model", model);
+        //     formData.append("description", description);
+        //     formData.append("sendOption", sendOption);
+        //     if (sendOption === "selected") {
+        //         formData.append("selectedOrgs", JSON.stringify(selectedOrgs));
+        //     }
+
+        //     fetch("/submit-ewaste", {
+        //         method: "POST",
+        //         body: formData
+        //     })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             alert(data.message);
+        //         })
+        //         .catch(error => {
+        //             console.error("Error:", error);
+        //             alert("Error submitting e-waste.");
+        //         });
+        // }
+
+
+
+
+        function toggleOrgSelection() {
+            const selection = document.getElementById("send-option").value;
+            document.getElementById("org-selection").style.display = selection === "selected" ? "block" : "none";
+        }
+
+        async function submitEwaste() {
+            const productName = document.getElementById("product-name").value;
+            const productAge = document.getElementById("product-age").value;
+            const productBrand = document.getElementById("product-brand").value;
+            const productModel = document.getElementById("product-model").value;
+            const productDescription = document.getElementById("product-description").value;
+            const userId = document.getElementById("user-id").value;
+            const email = document.getElementById("email").value;
+
+            const sendOption = document.getElementById("send-option").value;
+            let selectedOrganizations = [];
+
+            if (sendOption === "selected") {
+                document.querySelectorAll(".org-checkbox:checked").forEach(checkbox => {
+                    selectedOrganizations.push(checkbox.value);
+                });
+            } else {
+                selectedOrganizations.push("all"); // Send to all organizations
+            }
+
+            const productData = {
+                product_name: productName,
+                product_age: productAge,
+                brand: productBrand,
+                model: productModel,
+                description: productDescription,
+                user_id: userId,
+                email: email,
+                organizations: selectedOrganizations
+            };
+
+
+            try {
+                const response = await fetch("http://127.0.0.1:5000/submit_product", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(productData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                const result = await response.json();
+                alert(result.message || "Product submitted successfully!");
+            } catch (error) {
+                console.error("Error submitting product:", error);
+                alert("Failed to submit product. Please try again.");
+            }
+
+        }
+
+
     </script>
 
 </body>
-</html>
 
+</html>

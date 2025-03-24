@@ -1,0 +1,5 @@
+# Ignore environment variables file
+.env
+
+# Ignore Firebase SDK credentials file
+firebase-admin-sdk.json

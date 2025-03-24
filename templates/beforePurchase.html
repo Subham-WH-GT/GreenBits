@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <style>
+        
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+}
+
+.container3 {
+    max-width: 800px;
+    margin: auto;
+}
+
+input {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #357AE8;
+}
+
+/* Horizontal Scrollbar */
+.scroll-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 10px 0;
+}
+
+.video-results {
+    display: flex;
+    gap: 15px;
+}
+
+/* Video Cards */
+.video {
+    display: inline-block;
+    width: 250px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    flex-shrink: 0; /* Prevent videos from shrinking */
+}
+
+.video img {
+    width: 100%;
+    max-width: 250px;
+    border-radius: 5px;
+}
+
+/* .video h3 {
+    font-size: 14px;
+    margin: 5px 0;
+} */
+
+.video h3 {
+    font-size: 14px;
+    margin: 5px 0;
+    white-space: nowrap; /* Prevents text from wrapping */
+    overflow: hidden; /* Hides overflowing text */
+    text-overflow: ellipsis; /* Adds "..." for truncated text */
+    width: 100%; /* Ensures it stays inside the box */
+    display: block;
+}
+
+
+.video a {
+    display: block;
+    margin-top: 5px;
+    color: #4285F4;
+    text-decoration: none;
+}
+    </style>
+</head>
+<body>
+    <div class="container3">
+        <h1>Select the best product from the crowd!</h1>
+        <input type="text" id="searchQuery" placeholder="Enter product name with budget range">
+        <button onclick="searchVideos()">Search</button>
+        <div class="scroll-container">
+            <div id="results" class="video-results"></div>
+        </div>
+    </div>
+
+    <script>
+               function searchVideos() {
+    const query = document.getElementById("searchQuery").value;
+    if (!query) {
+        alert("Please enter a search term");
+        return;
+    }
+
+    fetch(`/search?query=${query}`)
+        .then(response => response.json())
+        .then(data => {
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = ""; // Clear previous results
+
+            if (data.videos.length === 0) {
+                resultsDiv.innerHTML = "<p>No results found.</p>";
+                return;
+            }
+
+            data.videos.forEach(video => {
+                const videoElement = `
+                    <div class="video">
+                        <img src="${video.thumbnail}" alt="${video.title}">
+                        <h3>${video.title}</h3>
+                        <a href="${video.video_url}" target="_blank">Watch on YouTube</a>
+                    </div>
+                `;
+                resultsDiv.innerHTML += videoElement;
+            });
+        })
+        .catch(error => console.error("Error fetching videos:", error));
+}
+
+    </script>
+</body>
+</html>

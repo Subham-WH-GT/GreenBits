@@ -229,19 +229,26 @@
                 <a href="#help" class="text-gray-600 hover:text-green-700">Help</a>
                 <a href="#contact" class="text-gray-600 hover:text-green-700">Contact</a>
                 <div class="inline-flex space-x-4">
-                    <button onclick="location.href='/signup'"
+                    <button onclick="signIn()"
                         class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Sign In -
                         Individual</button>
 
                         <!-- <button onclick="location.href='/signup'"
                         class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Sign Up</button>     -->
-                    <button onclick="location.href='/orgsign'"
+                    <button onclick="signInOrg()"
                         class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Sign In -
                         Organization</button>
                 </div>
             </div>
         </div>
     </nav>
+
+
+
+
+
+
+
 
     <!-- Hero Section -->
     <header class="text-center py-20 px-4">
@@ -372,7 +379,71 @@
         </div>
     </footer>
 
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+
+
     <script>
+
+        // ✅ Initialize Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyCCGB4SsonBzfj8R37GuOt1R7In0QU5TYw",
+    authDomain: "greenbits-b07d8.firebaseapp.com",
+    projectId: "greenbits-b07d8",
+    storageBucket: "greenbits-b07d8.appspot.com",
+    messagingSenderId: "382465122014",
+    appId: "1:382465122014:web:eb5815cda91d552a64ec4f",
+    measurementId: "G-NZ5WCZZE4W"
+};
+
+// ✅ Initialize Firebase App
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+// ✅ Authentication Functions
+function signIn() {
+  
+    const provider = new firebase.auth.GoogleAuthProvider();
+
+    firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+            console.log("✅ User signed in:", result.user);
+            
+            // Store UID for later use
+            const userUID = result.user.uid;  
+
+            fetch("http://127.0.0.1:5000/login", {  // Keep the existing login route
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    uid: userUID,
+                    name: result.user.displayName,
+                    email: result.user.email,
+                    profile_picture: result.user.photoURL
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("📢 Backend Response:", data);
+
+                // ✅ Redirect to personhome.html after login
+                if (!data.error) {
+                    console.log("➡️ Redirecting to personhome...");
+                    window.location.href = "/personhome";  
+                }
+            })
+            .catch(error => console.error("❌ Backend Error:", error));
+        })
+        .catch(error => console.error("❌ Firebase Sign-In Error:", error));
+    }
+   
+
+
+
+   
+
         // Add interactivity here if needed
         let slideIndex = 0;
         showSlides(slideIndex);
@@ -393,6 +464,42 @@
         }
 
         setInterval(function () { changeSlides(1); }, 10000);
+
+
+
+
+        function signInOrg() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider)
+            .then((result) => {
+                console.log("Organization signed in:", result.user);
+
+                const orgData = {
+                    uid: result.user.uid,
+                    name: result.user.displayName,
+                    email: result.user.email,
+                    // profile_picture: result.user.photoURL
+                };
+                localStorage.setItem("organizationId", result.user.uid);
+                // Send organization data to backend
+                fetch("http://127.0.0.1:5000/org_signin", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(orgData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Organization data sent to backend:", data);
+                    
+                    // Redirect to organization dashboard
+                    window.location.href = `http://127.0.0.1:5000/organisation`;
+                })
+                .catch(error => console.error("Error sending data:", error));
+            })
+            .catch((error) => {
+                console.error("Sign-in error:", error);
+            });
+    }
     </script>
 </body>
 

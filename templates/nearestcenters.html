@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Waste Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>E-Waste Collection Centers</h1>
+        <input type="text" id="stateInput" placeholder="format: west bengal">
+        <button onclick="searchState()">Search</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function searchState() {
+            let stateName = document.getElementById("stateInput").value;
+            if (!stateName.trim()) {
+                alert("Please enter a state name");
+                return;
+            }
+
+            fetch("/Search", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ state: stateName })
+            })
+            .then(response => response.json())
+            .then(data => {
+                let resultDiv = document.getElementById("result");
+                if (data.error) {
+                    resultDiv.innerHTML = `<p style="color: red;">${data.error}</p>`;
+                } else {
+                    resultDiv.innerHTML = `
+                        <h3>State: ${data.state}</h3>
+                        <p><strong>🔹 E-Waste Centers:</strong> ${data.e_waste_centers}</p>
+                        <p><strong>💡 AI Response:</strong> ${data.gemini_response}</p>
+                    `;
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>

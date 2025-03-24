@@ -9,7 +9,7 @@ MODEL_PATH = "model/e_waste_classifier.h5"
 model = tf.keras.models.load_model(MODEL_PATH)
 
 # Load class labels dynamically
-dataset_dir = "C:/Users/user/Desktop/GreenBits/modified-dataset"
+dataset_dir = "C:/Users/user/Desktop/GreenBit/modified-dataset"
 train_dir = os.path.join(dataset_dir, "train")
 categories = sorted(os.listdir(train_dir))  # Gets the folder names (class labels)
 
