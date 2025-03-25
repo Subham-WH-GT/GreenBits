@@ -413,8 +413,12 @@ def get_notifications():
     notifications = []
     for message in messages_query:
         data = message.to_dict()
-        notification_text = f"{data.get('messageType', 'Update')} - {data.get('productName', '')} {data.get('model', '')} product_id- {data.get('productId', '')} by {data.get('organizationId', '')}. Estimated price: {data.get('estimatedPrice', 'N/A')}."
-        notifications.append(notification_text)
+        notification_text = f"{data.get('messageType', 'Update')} - {data.get('productName', '')} {data.get('model', '')} <br> product_id- {data.get('productId', '')} by {data.get('organizationId', '')}. Estimated price: {data.get('estimatedPrice', 'N/A')}."
+        # notifications.append(notification_text)
+        notifications.append({
+            "text": notification_text,
+            "status": data.get("status", "pending")  # Default to "pending" if status is missing
+        })
 
     if not notifications:
         return jsonify({"message": "No new notifications"}), 200
@@ -430,8 +434,14 @@ def submit_delivery_details():
 
         if not data:
             return jsonify({"error": "No data received"}), 400
+        user_id = data.get("user_id")   # Get userId from request
+        product_id = data.get("product_id") 
+        noti_ref = db.collection("individualMessage")
+        matching_docs = noti_ref.where("userId", "==", user_id).where("productId", "==", product_id).stream()
+        for doc in matching_docs:
+            doc_ref = noti_ref.document(doc.id)
+            doc_ref.set({"status": "accepted"},merge=True)
 
-       
         delivery_ref = db.collection("delivery_location").document()
         delivery_ref.set({
             "user_id": data.get("user_id"),
@@ -474,7 +484,8 @@ def get_organization_deliveries():
                 "product_id": delivery_data.get("product_id"),
                 "location": delivery_data.get("delivery_location"),
                 "pincode": delivery_data.get("delivery_pincode"),
-                "state": delivery_data.get("state")
+                "state": delivery_data.get("state"),
+                "status":delivery_data.get("status","")
             })
 
         return jsonify({"deliveries": deliveries}), 200
@@ -652,6 +663,46 @@ SEARCH_ENGINE_ID = os.getenv("ENGINE_ID")
 def compare():
     query = request.form.get("query") if request.method == "POST" else ""
     return render_template("compare.html", query=query, search_engine_id=SEARCH_ENGINE_ID)    
+
+
+
+@app.route("/send_greenbits", methods=["POST"])
+def send_greenbits():
+    data = request.json
+    product_id = data.get("product_id")
+    customer_id = data.get("customer_id")
+    org_id = data.get("org_id")
+    green_bits = data.get("green_bits")
+
+    if not (product_id and customer_id and org_id and green_bits):
+        return jsonify({"message": "Missing required data"}), 400
+
+    # Update or create entry in database
+
+    delivery_ref = db.collection("delivery_location")
+
+    # Query Firestore for the matching document
+    matching_docs = delivery_ref.where("product_id", "==", product_id) \
+                                .where("user_id", "==", customer_id) \
+                                .where("org_id", "==", org_id) \
+                                .stream()
+
+    
+    for doc in matching_docs:
+        doc_ref = delivery_ref.document(doc.id)
+        doc_ref.set({"status": "Accepted"}, merge=True)  # Add or update the status field
+        
+
+    greenbits_ref = db.collection("greenBitsDatabase").document(product_id)
+    greenbits_ref.set({
+        "product_id": product_id,
+        "customer_id": customer_id,
+        "org_id": org_id,
+        "green_bits": int(green_bits),
+    }, merge=True)
+
+    return jsonify({"message": "GreenBits added successfully!"}), 200
+
 
 
 if __name__ == '__main__':

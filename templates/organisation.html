@@ -184,6 +184,80 @@ input, textarea {
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     }
+
+
+    /* Modal Styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal Box */
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Close Button */
+.close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Inputs */
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Buttons */
+.modal-buttons {
+    margin-top: 15px;
+}
+
+.send-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.send-btn:hover {
+    background-color: #218838;
+}
+
+.cancel-btn:hover {
+    background-color: #c82333;
+}
+
     </style>
 </head>
 <body>
@@ -210,7 +284,23 @@ input, textarea {
         <ul>
             <li><i class="fas fa-home"></i> Dashboard</li>
             <li><i class="fas fa-bell"></i> Notifications</li>
-            <li><i class="fas fa-users"></i> User Requests</li>
+            <!-- <li><i class="fas fa-users"></i> User Requests</li> -->
+            <li onclick="openGreenBitsModal()"><i class="fas fa-gift"></i> Send GreenBits</li>
+            <div id="greenBitsModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <!-- <span class="close" onclick="closeGreenBitsModal()">&times;</span> -->
+                    <h2>Send GreenBits</h2>
+                   
+                    <label for="greenBitsAmount">Number of GreenBits:</label>
+                    <input type="number" id="greenBitsAmount" placeholder="Enter greenbits amount" min="2" required>
+            
+                    <div class="modal-buttons">
+                        <button class="send-btn" onclick="sendGreenBits()">Send</button>
+                        <button class="cancel-btn" onclick="closeGreenBitsModal()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+            
             <li><i class="fas fa-cogs"></i> Settings</li>
             <li><i class="fas fa-sign-out-alt"></i> Logout</li>
         </ul>
@@ -330,6 +420,7 @@ input, textarea {
             <th>Location</th>
             <th>Pincode</th>
             <th>State</th>
+            <th>Status</th>
         </tr>
     </thead>
     <tbody id="deliveries-table"></tbody>
@@ -366,12 +457,57 @@ async function fetchOrganizationDeliveries() {
 }
 
 function displayDeliveries(deliveries) {
-    const tableBody = document.getElementById("deliveries-table");
+    // const tableBody = document.getElementById("deliveries-table");
 
-    tableBody.innerHTML = "";  // Clear previous data
+    // tableBody.innerHTML = "";  // Clear previous data
+
+    // deliveries.forEach(delivery => {
+    //     const row = document.createElement("tr");
+    //     row.innerHTML = `
+    //         <td>${delivery.customer_id}</td>
+    //         <td>${delivery.customer_mail}</td>
+    //         <td>${delivery.customer_contact_no}</td>
+    //         <td>${delivery.product_id}</td>
+    //         <td>${delivery.location}</td>
+    //         <td>${delivery.pincode}</td>
+    //         <td>${delivery.state}</td> 
+    //         <td id="status-${delivery.product_id}">
+    //             <input type="checkbox" id="checkbox-${delivery.product_id}" 
+    //                 onchange="toggleReceivedButton('${delivery.product_id}')">
+    //             <button id="received-btn-${delivery.product_id}" disabled 
+    //                 onclick="markAsReceived('${delivery.product_id}', '${delivery.customer_id}')">
+    //                 Received
+    //             </button>
+    //         </td>
+    //     `;
+    //     tableBody.appendChild(row);
+    // });
+
+
+
+
+    const tableBody = document.getElementById("deliveries-table");
+    tableBody.innerHTML = ""; // Clear previous data
 
     deliveries.forEach(delivery => {
         const row = document.createElement("tr");
+        console.log(`Status for ${delivery.product_id}: "${delivery.status}"`);
+        let statusCellContent = `
+            <input type="checkbox" id="checkbox-${delivery.product_id}" 
+                onchange="toggleReceivedButton('${delivery.product_id}')">
+            <button id="received-btn-${delivery.product_id}" disabled 
+                onclick="markAsReceived('${delivery.product_id}', '${delivery.customer_id}', '${delivery.org_id}')">
+                Received
+            </button>
+        `;
+
+        // Check if status is "accepted", then replace the checkbox and button
+        if (delivery.status === "Accepted") {
+            statusCellContent = `
+                <span style="color: green; font-weight: bold;">✔ Received</span>
+            `;
+        }
+
         row.innerHTML = `
             <td>${delivery.customer_id}</td>
             <td>${delivery.customer_mail}</td>
@@ -379,11 +515,39 @@ function displayDeliveries(deliveries) {
             <td>${delivery.product_id}</td>
             <td>${delivery.location}</td>
             <td>${delivery.pincode}</td>
-            <td>${delivery.state}</td>
+            <td>${delivery.state}</td> 
+            <td id="status-${delivery.product_id}">
+                ${statusCellContent}
+            </td>
         `;
         tableBody.appendChild(row);
     });
+} 
+
+function toggleReceivedButton(productId) {
+    const checkbox = document.getElementById(`checkbox-${productId}`);
+    const button = document.getElementById(`received-btn-${productId}`);
+    button.disabled = !checkbox.checked; // Enable button only if checkbox is checked
 }
+
+function markAsReceived(productId, customerId) {
+    const statusCell = document.getElementById(`status-${productId}`);
+    const checkbox = document.getElementById(`checkbox-${productId}`);
+
+    if (!checkbox.checked) return; // Ensure the checkbox is checked
+
+    // Replace checkbox and button with green "Received" text
+
+    // Show the Green Bit Modal
+    const orgId = localStorage.getItem("organizationId");
+
+    openGreenBitsModal(productId,customerId,orgId);
+    statusCell.innerHTML = `<span style="color: green; font-weight: bold;">✔ Received</span>`;
+
+}
+
+
+
 // document.addEventListener("DOMContentLoaded", function () {
 //         const orgId = localStorage.getItem("organizationId"); // Get stored org ID
 //         if (!orgId) {
@@ -667,6 +831,65 @@ const organizationName = await getOrganizationName(organizationId);
         alert("Failed to send data.");
     }
     }  
+
+
+    let selectedProductIdgreen = null;
+let selectedCustomerIdgreen = null;
+let selectedOrgIdgreen = null;
+
+
+    function openGreenBitsModal(product_id,customer_id,org_id) {
+         selectedProductIdgreen = product_id;
+selectedCustomerIdgreen = customer_id;
+ selectedOrgIdgreen =org_id;
+    document.getElementById("greenBitsModal").style.display = "flex";
+}
+
+function closeGreenBitsModal() {
+    document.getElementById("greenBitsModal").style.display = "none";
+}
+
+function sendGreenBits() {
+    
+    let greenBitsAmount = document.getElementById("greenBitsAmount").value;
+    if (!greenBitsAmount) {
+        alert("Please enter the GreenBits amount.");
+        return;
+    }
+    let requestData = {
+        product_id: selectedProductIdgreen,
+        customer_id: selectedCustomerIdgreen,
+        org_id: selectedOrgIdgreen,
+        green_bits: greenBitsAmount
+    };
+    
+    console.log("Sending GreenBits:", requestData);
+
+// Send data to Flask backend
+fetch("/send_greenbits", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify(requestData),
+})
+.then(response => response.json())
+.then(data => {
+    console.log("Response from server:", data);
+    alert("GreenBits Sent Successfully!");
+    closeGreenBitsModal();
+})
+.catch(error => {
+    console.error("Error sending GreenBits:", error);
+    alert("Failed to send GreenBits.");
+});
+
+fetchOrganizationDeliveries();
+    
+
+    closeGreenBitsModal();
+}
+
     </script>
 
 </body>

@@ -507,8 +507,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
+            background: rgb(0 0 0);
+            color: crimson;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
@@ -669,6 +669,9 @@
 
         .note-point span {
             color: red;
+        }
+        .notification p{
+            color: white;
         }
     </style>
 </head>
@@ -1067,6 +1070,7 @@
 
             let data = await response.json();
             console.log("Notifications Response:", data);
+            
 
             let menu = document.getElementById("notification-menu");
             let content = document.getElementById("notifications-content");
@@ -1076,12 +1080,24 @@
                 data.notifications.forEach(msg => {
                     let div = document.createElement("div");
                     div.classList.add("notification");
-                    // div.textContent = msg;
+
+
+                    if (msg.status === "accepted") {
+                // Replace buttons with a confirmation message
+                div.innerHTML = `
+                    <p>${msg.text}</p>
+                    <p class="confirmation-message">Offer Accepted, Our Collecting team will reach the given location within 2-3 working days!</p>
+                `;
+            }
+
+                else{    // div.textContent = msg;
                     div.innerHTML = `
-                <p>${msg}</p>
+                <p>${msg.text}</p>
                 <button onclick="openDeliveryForm()">Accept Offer</button>
                 <button onclick="cancelSelling()">Cancel Selling</button>
             `;
+                }
+                    div.style.border="2px solid green"
                     content.appendChild(div);
                 });
 
@@ -1130,6 +1146,7 @@
                     closeDeliveryForm();
                 })
                 .catch(error => console.error("Error submitting delivery details:", error));
+                fetchNotifications()
         });
 
         // Cancel Selling Function
