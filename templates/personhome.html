@@ -1,114 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GreenBits - Individual Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #d4fc79, #96e6a1);
-        }
-        header {
-            /* background: linear-gradient(90deg, #1b3727, #9ee1bc); */
-            color: #161414;;
-            padding: 20px;
-            text-align: center;
-            font-size: 35px;
-            font-weight: bold;
-            font-style: italic;
-    /* font-weight: bold; */
-    font-family: monospace;
-            /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); */
-            text-decoration: underline;
-        }
-        .container {
-            width: 80%;
-            margin: 30px auto;
-            padding: 25px;
-            background:#367838cc;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
-        }
-        .section {
-            margin-bottom: 40px;
-            padding: 20px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        .btn {
-            display: inline-block;
-            padding: 12px 25px;
-            background: linear-gradient(90deg, #2E8B57, #3CB371);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .btn:hover {
-            background: linear-gradient(90deg, #3CB371, #2E8B57);
-        }
-        .footer {
-            text-align: center;
-            padding: 15px;
-            background: linear-gradient(90deg, #2E8B57, #3CB371);
-            color: white;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            font-size: 16px;
-        }
-        h2 {
-            color: #2E8B57;
-        }
-
-
-    </style>
-</head>
-<body>
-    <header>Welcome to GreenBits - {{sendname}}</header>
-    <div class="container">
-        <div class="section">
-            <h2>Your Role in a Green Future</h2>
-            <p>Individuals play a vital role in managing e-waste responsibly. By recycling electronic items, you contribute to a cleaner environment and reduce landfill waste.</p>
-        </div>
-        
-        <div class="section">
-            <h2>Upload Your E-Waste</h2>
-            <p>Upload an image of your e-waste. Our AI system will recognize the material type and estimate its value based on details like age, damage, and usability.</p>
-            <input type="file" accept="image/*">
-            <button class="btn">Analyze</button>
-        </div>
-        
-        <div class="section">
-            <h2>Self-Paced E-Waste Management Videos</h2>
-            <video width="100%" controls>
-                <source src="video.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </div>
-        
-        <div class="section">
-            <h2>Rewards Criteria</h2>
-            <p>Earn rewards for every responsible e-waste submission! Get points based on material type, usability, and quantity.</p>
-        </div>
-        
-        <div class="section">
-            <h2>Your Progress</h2>
-            <p>Check how close you are to earning your next reward on the map.</p>
-            <img src="map-placeholder.png" alt="Reward Progress Map" width="100%" style="border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);">
-        </div>
-    </div>
-    <!-- <div class="footer">&copy; 2025 GreenBits. All rights reserved.</div> -->
-<!-- </body>
-</html> --> -->
-
 
 
 <!DOCTYPE html>
@@ -125,7 +14,6 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            /* background: linear-gradient(to right,black, blue); */
             background: linear-gradient(to right, #ffeb3bd9, #178d1c);
 
         }
@@ -221,7 +109,7 @@
         }
 
         .ai-image-process {
-            background-image: url('/static/images/tree.jpg');
+            /* background-image: url('/static/images/tree.jpg'); */
             background-size: cover;
             background-repeat: no-repeat;
             color: antiquewhite;
@@ -231,12 +119,25 @@
             height: 900px;
             /* width: 70%; */
             /* background: rgba(255, 255, 255, 0.1); */
-            margin: 30px;
+            /* margin: 30px; */
+            margin-left: 10px;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
             /* width: 90%;
             max-width: 400px; */
+            background-color: #8a80806b;
+    height: 310px;
+    overflow: scroll;
+        }
+
+        .nlp-head{
+            margin-bottom: 0px;
+    font-size: xx-large;
+    font-family: monospace;
+    font-weight: 800;
+    padding: 10px;
+margin-top: 3rem;
         }
 
         h2 {
@@ -294,17 +195,17 @@
 
         .reward-back {
             /* background-image: url('/static/images/re.jpg'); */
-            background: radial-gradient(circle, #FF5733, #3f51b5c9);
+            /* background: radial-gradient(circle, #FF5733, #3f51b5c9); */
             border-radius: 30px;
         }
 
         .me {
             font-size: xxx-large;
-            font-weight: 200;
-            font-family: cursive;
-            color: #FFEB3B;
+            font-weight: 600;
+            font-family: monospace;
+            color: black;
             padding-left: 38px;
-            font-style: italic;
+            /* font-style: italic; */
         }
 
         .walleticon {
@@ -318,12 +219,7 @@
             font-family: monospace;
         }
 
-        /* .wallet-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            position: relative;
-        } */
+      
         .wallet-info {
             display: none;
             /* Initially hidden */
@@ -358,7 +254,7 @@
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
             padding: 20px;
-            background-color: black;
+            /* background-color: black; */
             margin-bottom: 3rem;
 
         }
@@ -383,12 +279,12 @@
         }
 
         .feature-container {
-            background-color: black;
+            background-color: #8a80806b;
         }
 
         .feature-container p {
 
-            color: white;
+            color: black;
             padding: 10px;
             font-family: cursive;
         }
@@ -419,13 +315,30 @@
 
 
         .upload-container {
-            margin: auto;
+            /* margin: auto;
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 10px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             max-width: 500px;
-            background-color: white;
+            background-color: white; */
+
+            margin: auto;
+    padding: 75px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    /* max-width: 500px; */
+    background-color:#8a80806b;
+    width: 98%;
+    height: 40rem;
+    overflow: scroll;
+    /* background-color: #a9a9a9; */
+    margin-bottom: 4rem;
+        }
+
+        .upload-container label{
+            font-weight: 700;
         }
 
         .upload-container input,
@@ -439,18 +352,7 @@
             border-radius: 5px;
         }
 
-        /* .org-selection {
-            display: none;
-            margin-top: 10px;
-        }
-
-        .org-list {
-            margin-top: 10px;
-        }
-
-        .org-list label {
-            display: block;
-        } */
+     
 
 
 
@@ -483,23 +385,7 @@
             font-weight: 500;
         }
 
-        /* 
-#notification-menu {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #f8f8f8;
-            padding: 10px;
-            border-radius: 5px;
-            width: 300px;
-            display: none;
-        }
-        .notification {
-            padding: 10px;
-            margin: 5px 0;
-            background: #e0ffe0;
-            border-left: 5px solid #4CAF50;
-        } */
+ 
 
 
         #notification-menu {
@@ -540,9 +426,7 @@
         }
 
         #notification-btn {
-            /* position: fixed; */
-            /* top: 20px; */
-            /* right: 20px; */
+           
             background: none;
             border: none;
             font-size: 24px;
@@ -621,7 +505,7 @@
         .container2 {
             /* max-width: 600px; */
             margin: 50px auto;
-            background: white;
+            background: #8a80806b;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -629,6 +513,15 @@
             height: 30rem;
             width: 95%;
             margin-bottom: -1px;
+            margin-top: 0px;
+        }
+
+        .gemma-head{
+            margin-bottom: 0px;
+    padding: 28px;
+    font-size: xx-large;
+    font-family: monospace;
+    font-weight: 600;
         }
 
         textarea {
@@ -637,6 +530,8 @@
             margin-bottom: 10px;
             padding: 10px;
             font-size: 16px;
+            border-radius: 9px;
+            padding: 10px;
         }
 
         button {
@@ -673,26 +568,31 @@
         .notification p{
             color: white;
         }
+
+        .product-detail{
+            padding: 16px;
+    font-family: monospace;
+    font-size: xxx-large;
+    font-weight: 600;
+        }
+
+        .re{
+            background-color:#8a80806b;
+        }
     </style>
 </head>
 
 <body>
-    <!-- <header>
-        Welcome to GreenBits, <span id="username">{{sendname}}</span>
-    </header> -->
+  
 
     <header
         style="display: flex; justify-content: space-between; align-items: center; padding: 10px; color: rgb(11, 11, 11);">
-        <!-- Left: Welcome Message -->
+        
         <div class="icon">
             GreenBits
         </div>
 
-        <!-- <button onclick="toggleNotifications()">🔔 Notifications</button>
-        <div id="notification-menu">
-            <h3>Notifications</h3>
-            <div id="notifications"></div>
-        </div> -->
+       
 
         <div class="noti">
 
@@ -751,21 +651,14 @@
 
 
         
-        <!-- Right: Wallet, User Info, Logout -->
+        
         <div style="display: flex; align-items: center; gap: 15px;">
-            <!-- Wallet Icon -->
-
-            <!-- <img class="walleticon" src="static/images/wallet.png" alt="">
-
-            <div class="wallet-info" id="wallet-info">
-                <p>Green Bits: <span id="greenbits">{{ user.greenbits }}</span></p>
-                <button class="redeem-button">Redeem</button>
-            </div> -->
+          
 
             <img class="walleticon" src="static/images/wallet.png" alt="Wallet Icon" onclick="toggleWalletInfo()"
                 style="cursor: pointer;">
 
-            <!-- Wallet Info (Initially Hidden) -->
+           
             <div class="wallet-info" id="wallet-info" style="display: none;">
                 <p>Current GreenBits in your wallet: <span id="greenbits">{{ user.greenbits }}</span></p>
                 <button class="redeem-button">Redeem</button>
@@ -778,7 +671,7 @@
             </div>
 
 
-            <!-- Profile Picture -->
+           
             <img id="user-photo" src="{{ user.profile_picture }}" alt="User Photo"
                 style="width: 40px; height: 40px; border-radius: 50%;">
 
@@ -820,9 +713,9 @@
             </div>
         </div>
     </div>
-
+    <h1 class="nlp-head">Smart-Management Analyzer!</h1>
     <div class="ai-image-process">
-        <h1>Smart-Management Analyzer!</h1>
+       
 
         <h2>Upload your E-Product</h2>
         <form id="upload-form" enctype="multipart/form-data">
@@ -837,8 +730,9 @@
 
 
     <!-- Gemma Portion -->
+    <h1 class="gemma-head">E-Waste Sustainability Advisor</h1>
     <div class="container2">
-        <h1>E-Waste Sustainability Advisor</h1>
+        
         <h5>Ask gemma about how you dispose your e-waste</h5>
         <form id="analyzeForm">
             <textarea name="text" id="description"
@@ -859,11 +753,11 @@
 
             A big thanks to Google Colab for providing the necessary GPU and RAM resources for training! Looking Forward
             to get some resources.<br><a href="/static/gemma-tuned.pdf" target="_blank">📄 Click here to view.</a></p>
-        <!-- <p><a href="/static/gemma-tuned.pdf" target="_blank">📄 Click here to view.</a></p> -->
+        
     </div>
 
 
-    <h1 style="text-align: center;font-size: xx-large;font-family: monospace;">Prefer your Organisation</h1>
+    <h1 style="font-size: xxx-large;font-family: monospace;font-weight: 700;">Prefer your Organisation</h1>
     <div class="feature-container" id="market-insights">
         <p>Please fill the form below and choose your organisation to whom you want your product to sell. Once you
             filled the form, if the organisation approve the product you will be mailed/notified the estimated price
@@ -873,9 +767,9 @@
 
 
 
-
+    <h2 class="product-detail">Upload E-Waste Product</h2>
     <div class="upload-container">
-        <h2>Upload E-Waste Product</h2>
+        
 
 
         <label for="product-name">Product Type:</label>
@@ -899,29 +793,24 @@
         <label for="email">Email:</label>
         <input type="email" id="email" placeholder="Enter active e-mail">
 
-        <!-- Select Option -->
+       
         <label>Send to:</label>
         <select id="send-option" onchange="toggleOrgSelection()">
             <option value="all">All Organizations</option>
             <option value="selected">Selected Organizations</option>
         </select>
 
-        <!-- Organization Selection -->
+        
         <div id="org-selection" class="org-selection">
             <h3>Select Organizations:</h3>
-            <!-- <div class="org-list">
-                <label><input type="checkbox" class="org-checkbox" value="org1"> Org1 - We collect e-waste.</label>
-                <label><input type="checkbox" class="org-checkbox" value="org2"> Org2 - We collect e-waste.</label>
-                <label><input type="checkbox" class="org-checkbox" value="org3"> Org3 - We collect e-waste.</label>
-                <label><input type="checkbox" class="org-checkbox" value="org4"> Org4 - We collect e-waste.</label>
-            </div> -->
+           
 
             <div id="org-list" class="org-list">
-                <!-- Organizations will be dynamically inserted here -->
+                
             </div>
         </div>
 
-        <!-- Submit Button -->
+       
         <button onclick="submitEwaste()">Send</button>
     </div>
 
@@ -932,8 +821,8 @@
 
     <div class="reward-back">
         <h1 class="me">Earn Your Rewards!</h1>
-        <div class="max-w-4xl mx-auto p-6 mt-10">
-            <!-- How to Earn GreenBits -->
+        <div class="max-w-4xl mx-auto p-6 mt-10 re">
+            
             <div class="bg-white p-6 rounded-lg shadow-lg">
                 <h2 class="text-2xl font-bold text-green-600">🌱 How to Earn GreenBits</h2>
                 <p class="text-gray-600 mt-2">Dispose of your e-waste responsibly and earn GreenBits based on the
@@ -992,7 +881,7 @@
 
 
         document.getElementById("analyzeForm").addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent form from refreshing page
+            event.preventDefault(); 
 
             let description = document.getElementById("description").value;
             let responseElement = document.getElementById("response");
@@ -1024,40 +913,6 @@
 
 
 
-        // function toggleNotifications() {
-        //             const menu = document.getElementById("notification-menu");
-        //             menu.style.display = menu.style.display === "block" ? "none" : "block";
-        //         }
-
-        //         async function fetchNotifications() {
-
-
-
-        //             let response = await fetch("/get_notifications", {
-        //         method: "GET",
-        //         credentials: "include",  // 🔥 Ensures session cookies are sent
-        //     });
-
-        //     let data = await response.json();
-        //     console.log("Notifications Response:", data);  // 🔴 Debugging: Check API response
-
-        //     let menu = document.getElementById("notification-menu");
-        //     menu.innerHTML = "";
-
-        //     if (data.notifications && data.notifications.length > 0) {
-        //         data.notifications.forEach(msg => {
-        //             let div = document.createElement("div");
-        //             div.classList.add("notification");
-        //             div.textContent = msg;
-        //             menu.appendChild(div);
-        //         });
-        //         menu.style.display = "block";
-        //     } else {
-        //         menu.innerHTML = "<div class='notification'>No new notifications</div>";
-        //     }
-        //         }
-
-        //         window.onload = fetchNotifications;
 
         document.getElementById("notification-btn").addEventListener("click", fetchNotifications);
 
@@ -1149,7 +1004,7 @@
                 fetchNotifications()
         });
 
-        // Cancel Selling Function
+        
         async function cancelSelling() {
             alert("You have canceled the selling offer.");
         }
@@ -1158,7 +1013,7 @@
 
 
 
-        // Function to close the notification popup
+       
         function closeNotifications() {
             document.getElementById("notification-menu").style.display = "none";
         }
@@ -1170,7 +1025,7 @@
             walletInfo.style.display = (walletInfo.style.display === "block") ? "none" : "block";
         }
 
-        // Hide Wallet Info When Clicking Outside
+       
         document.addEventListener("click", function (event) {
             var walletInfo = document.getElementById("wallet-info");
             var walletIcon = document.querySelector(".walleticon");
@@ -1190,8 +1045,8 @@
                 .then(data => {
                     console.log("📢 Fetched Organizations:", data);
 
-                    const container = document.querySelector(".card-grid"); // Target the card container
-                    container.innerHTML = ""; // Clear existing content
+                    const container = document.querySelector(".card-grid"); 
+                    container.innerHTML = ""; 
 
                     data.forEach(org => {
                         const card = document.createElement("div");
@@ -1206,8 +1061,8 @@
                     });
 
 
-                    const orgList = document.querySelector("#org-list"); // Target the checkbox container
-                    orgList.innerHTML = ""; // Clear existing content
+                    const orgList = document.querySelector("#org-list"); 
+                    orgList.innerHTML = ""; 
 
                     data.forEach(org => {
                         const checkbox = document.createElement("label");
@@ -1229,7 +1084,7 @@
                 method: "POST",
                 credentials: "include"
             }).then(() => {
-                window.location.href = "/"; // Redirect to login page
+                window.location.href = "/"; 
             }).catch(error => console.error("Logout Error:", error));
         }
 
@@ -1241,7 +1096,7 @@
                 reader.onload = function (e) {
                     let img = document.getElementById("uploaded-image");
                     img.src = e.target.result;
-                    img.style.display = "block"; // Show the image
+                    img.style.display = "block"; 
                 };
                 reader.readAsDataURL(file);
             }
@@ -1277,9 +1132,7 @@
 
 
 
-            // document.getElementById("result").innerHTML = 
-            //     `<h3>Prediction: ${result.prediction}</h3>
-            //      <p>Confidence: ${result.confidence}</p>`;
+          
         };
 
 
@@ -1289,70 +1142,7 @@
 
 
 
-        // function toggleOrgSelection() {
-        //     var sendOption = document.getElementById("send-option").value;
-        //     var orgSelection = document.getElementById("org-selection");
-
-        //     if (sendOption === "selected") {
-        //         orgSelection.style.display = "block";
-        //     } else {
-        //         orgSelection.style.display = "none";
-        //     }
-        // }
-
-        // function submitEwaste() {
-        //     var image = document.getElementById("product-image").files[0];
-        //     var name = document.getElementById("product-name").value;
-        //     var age = document.getElementById("product-age").value;
-        //     var brand = document.getElementById("product-brand").value;
-        //     var model = document.getElementById("product-model").value;
-        //     var description = document.getElementById("product-description").value;
-        //     var sendOption = document.getElementById("send-option").value;
-        //     var selectedOrgs = [];
-
-        //     if (sendOption === "selected") {
-        //         var checkboxes = document.querySelectorAll(".org-checkbox:checked");
-        //         checkboxes.forEach(checkbox => selectedOrgs.push(checkbox.value));
-
-        //         if (selectedOrgs.length === 0) {
-        //             alert("Please select at least one organization.");
-        //             return;
-        //         }
-        //     }
-
-        //     if (!name || !age || !brand || !model || !description || !image) {
-        //         alert("Please fill all fields and upload an image.");
-        //         return;
-        //     }
-
-        //     var formData = new FormData();
-        //     formData.append("image", image);
-        //     formData.append("name", name);
-        //     formData.append("age", age);
-        //     formData.append("brand", brand);
-        //     formData.append("model", model);
-        //     formData.append("description", description);
-        //     formData.append("sendOption", sendOption);
-        //     if (sendOption === "selected") {
-        //         formData.append("selectedOrgs", JSON.stringify(selectedOrgs));
-        //     }
-
-        //     fetch("/submit-ewaste", {
-        //         method: "POST",
-        //         body: formData
-        //     })
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             alert(data.message);
-        //         })
-        //         .catch(error => {
-        //             console.error("Error:", error);
-        //             alert("Error submitting e-waste.");
-        //         });
-        // }
-
-
-
+      
 
         function toggleOrgSelection() {
             const selection = document.getElementById("send-option").value;
@@ -1376,7 +1166,7 @@
                     selectedOrganizations.push(checkbox.value);
                 });
             } else {
-                selectedOrganizations.push("all"); // Send to all organizations
+                selectedOrganizations.push("all"); 
             }
 
             const productData = {

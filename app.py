@@ -188,6 +188,37 @@ def google_login():
 
         if not uid or not email:
             return jsonify({"error": "Invalid data"}), 400
+        
+        greenbit_query = db.collection("greenBitsDatabase").where("customer_id", "==", uid).stream()
+        for greenbit_doc in greenbit_query:
+            greenbit_data = greenbit_doc.to_dict()
+
+        # 2. Check if received == 0
+            if greenbit_data.get("received") == 0:
+                green_bits_amount = greenbit_data.get("green_bits", 0)
+
+            # 3. Find the user in users2 database
+                user_ref = db.collection("users2").document(uid)
+                user_doc = user_ref.get()
+
+                if user_doc.exists:
+                    user_data = user_doc.to_dict()
+                    updated_greenbits = user_data.get("greenbits", 0) + green_bits_amount
+
+                # 4. Update the user's greenbits in users2
+                    user_ref.update({"greenbits": updated_greenbits})
+
+                # 5. Mark received as 1 in greenbitsDatabase
+                    greenbit_doc_ref = db.collection("greenBitsDatabase").document(greenbit_doc.id)
+                    greenbit_doc_ref.update({"received": 1})
+
+                    # return jsonify({"message": "Greenbits updated successfully"}), 200
+
+
+
+
+
+
 
         user_ref = db.collection("users2").document(uid)
         user_doc = user_ref.get()
@@ -699,6 +730,7 @@ def send_greenbits():
         "customer_id": customer_id,
         "org_id": org_id,
         "green_bits": int(green_bits),
+        "received":0
     }, merge=True)
 
     return jsonify({"message": "GreenBits added successfully!"}), 200
