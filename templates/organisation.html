@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organization Dashboard - E-Waste Management</title>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZYgMbiyT1Ei5jsFqLtuBWrUqtieJLYNU&libraries=places"></script>
+
     <style>
         * {
             margin: 0;
@@ -258,6 +260,61 @@ input {
     background-color: #c82333;
 }
 
+/* #map {
+            height: 500px;
+            width: 100%;
+            margin-top: 10px;
+        } */
+
+
+
+        #sidebar2 {
+            width: 35%;
+            padding: 20px;
+            background: #f4f4f4;
+            height: 50rem;
+            overflow-y: scroll;
+        }
+        #map {
+            width: 65%;
+            height: 100vh;
+        }
+        input {
+            padding: 10px;
+            margin: 5px;
+            width: 90%;
+        }
+        /* button {
+            padding: 10px;
+            background: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        } */
+        h3 {
+            margin-top: 10px;
+            color: #333;
+        }
+        #route-details {
+            margin-top: 20px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            /* background: white; */
+            padding: 10px;
+            margin-bottom: 5px;
+            /* border-left: 5px solid blue; */
+        }
+
+        .bind{
+            display: flex;
+            margin-top: 5rem;
+        }
+
     </style>
 </head>
 <body>
@@ -425,6 +482,36 @@ input {
     </thead>
     <tbody id="deliveries-table"></tbody>
 </table>
+
+
+
+
+<!-- <h2>Optimized Route Finder</h2>
+<input type="text" id="source" placeholder="Enter Source Location">
+<input type="text" id="destination" placeholder="Enter Destination Location">
+<button onclick="getOptimizedRoute()">Find Route</button>
+
+<div id="map"></div> -->
+
+<div class="bind">
+<div id="sidebar2">
+    <h2>Optimized Route Finder</h2>
+    <input type="text" id="source" placeholder="Enter Source Location">
+    <input type="text" id="destination" placeholder="Enter Destination Location">
+    <button onclick="getOptimizedRoute()">Find Route</button>
+
+    <div id="route-details">
+        <h3>Route Information</h3>
+        <p><strong>Distance:</strong> <span id="distance">-</span></p>
+        <p><strong>Time:</strong> <span id="duration">-</span></p>
+        <h3>Steps</h3>
+        <ul id="steps"></ul>
+    </div>
+</div>
+
+<div id="map"></div>
+</div>
+
 
 
     <script>
@@ -889,6 +976,139 @@ fetchOrganizationDeliveries();
 
     closeGreenBitsModal();
 }
+
+
+
+
+
+
+// function initAutocomplete() {
+//             new google.maps.places.Autocomplete(document.getElementById("source"));
+//             new google.maps.places.Autocomplete(document.getElementById("destination"));
+//         }
+
+//         window.onload = initAutocomplete;
+
+//         function getOptimizedRoute() {
+//             let source = document.getElementById("source").value;
+//             let destination = document.getElementById("destination").value;
+
+//             if (!source || !destination) {
+//                 alert("Please enter both locations");
+//                 return;
+//             }
+
+//             fetch("/get_route", {
+//                 method: "POST",
+//                 headers: { "Content-Type": "application/json" },
+//                 body: JSON.stringify({ source, destination })
+//             })
+//             .then(response => response.json())
+//             .then(data => {
+//                 if (data.status === "OK") {
+//                     displayRoute(data.route);
+//                 } else {
+//                     alert("Error fetching route: " + data.message);
+//                 }
+//             })
+//             .catch(error => console.error("Error:", error));
+//         }
+
+//         function displayRoute(route) {
+//             let map = new google.maps.Map(document.getElementById("map"), {
+//                 zoom: 7,
+//                 center: route.start_location
+//             });
+
+//             let directionsService = new google.maps.DirectionsService();
+//             let directionsRenderer = new google.maps.DirectionsRenderer();
+//             directionsRenderer.setMap(map);
+
+//             let request = {
+//                 origin: route.start_address,
+//                 destination: route.end_address,
+//                 travelMode: "DRIVING"
+//             };
+
+//             directionsService.route(request, (result, status) => {
+//                 if (status === "OK") {
+//                     directionsRenderer.setDirections(result);
+//                 } else {
+//                     alert("Could not display directions: " + status);
+//                 }
+//             });
+//         }
+
+
+
+function initAutocomplete() {
+            new google.maps.places.Autocomplete(document.getElementById("source"));
+            new google.maps.places.Autocomplete(document.getElementById("destination"));
+        }
+
+        window.onload = initAutocomplete;
+
+        function getOptimizedRoute() {
+            let source = document.getElementById("source").value;
+            let destination = document.getElementById("destination").value;
+
+            if (!source || !destination) {
+                alert("Please enter both locations");
+                return;
+            }
+
+            fetch("/get_route", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ source, destination })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "OK") {
+                    displayRoute(data.route);
+                } else {
+                    alert("Error fetching route: " + data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        function displayRoute(route) {
+            let map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 7,
+                center: route.start_location
+            });
+
+            let directionsService = new google.maps.DirectionsService();
+            let directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map);
+
+            let request = {
+                origin: route.start_address,
+                destination: route.end_address,
+                travelMode: "DRIVING"
+            };
+
+            directionsService.route(request, (result, status) => {
+                if (status === "OK") {
+                    directionsRenderer.setDirections(result);
+                } else {
+                    alert("Could not display directions: " + status);
+                }
+            });
+
+            // Update Route Details
+            document.getElementById("distance").innerText = route.distance;
+            document.getElementById("duration").innerText = route.duration;
+            
+            let stepsList = document.getElementById("steps");
+            stepsList.innerHTML = "";
+            route.steps.forEach(step => {
+                let li = document.createElement("li");
+                li.innerHTML = step;
+                stepsList.appendChild(li);
+            });
+        }
 
     </script>
 

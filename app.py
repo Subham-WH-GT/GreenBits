@@ -26,6 +26,7 @@ cred = credentials.Certificate("firebase-admin-sdk.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
+GOOGLE_MAPS_API_KEY = os.getenv("MAP_KEY")
 
 
 
@@ -734,6 +735,69 @@ def send_greenbits():
     }, merge=True)
 
     return jsonify({"message": "GreenBits added successfully!"}), 200
+
+
+
+
+# @app.route("/get_route", methods=["POST"])
+# def get_route():
+#     data = request.get_json()
+#     source = data.get("source")
+#     destination = data.get("destination")
+
+#     if not source or not destination:
+#         return jsonify({"status": "ERROR", "message": "Invalid input"})
+
+#     directions_url = f"https://maps.googleapis.com/maps/api/directions/json?origin={source}&destination={destination}&key={GOOGLE_MAPS_API_KEY}&optimizeWaypoints=true"
+
+#     response = requests.get(directions_url)
+#     route_data = response.json()
+
+#     if route_data["status"] == "OK":
+#         route = route_data["routes"][0]["legs"][0]
+#         optimized_route = {
+#             "start_address": route["start_address"],
+#             "end_address": route["end_address"],
+#             "start_location": route["start_location"],
+#             "end_location": route["end_location"],
+#             "distance": route["distance"]["text"],
+#             "duration": route["duration"]["text"],
+#             "steps": [step["html_instructions"] for step in route["steps"]]
+#         }
+#         return jsonify({"status": "OK", "route": optimized_route})
+#     else:
+#         return jsonify({"status": "ERROR", "message": route_data["status"]})
+
+
+
+@app.route("/get_route", methods=["POST"])
+def get_route():
+    data = request.get_json()
+    source = data.get("source")
+    destination = data.get("destination")
+
+    if not source or not destination:
+        return jsonify({"status": "ERROR", "message": "Invalid input"})
+
+    directions_url = f"https://maps.googleapis.com/maps/api/directions/json?origin={source}&destination={destination}&key={GOOGLE_MAPS_API_KEY}&optimizeWaypoints=true"
+
+    response = requests.get(directions_url)
+    route_data = response.json()
+
+    if route_data["status"] == "OK":
+        route = route_data["routes"][0]["legs"][0]
+        optimized_route = {
+            "start_address": route["start_address"],
+            "end_address": route["end_address"],
+            "start_location": route["start_location"],
+            "end_location": route["end_location"],
+            "distance": route["distance"]["text"],
+            "duration": route["duration"]["text"],
+            "steps": [step["html_instructions"] for step in route["steps"]]
+        }
+        return jsonify({"status": "OK", "route": optimized_route})
+    else:
+        return jsonify({"status": "ERROR", "message": route_data["status"]})
 
 
 
