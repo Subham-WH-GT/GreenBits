@@ -628,6 +628,98 @@ margin-top: 3rem;
         font-size: x-large;
     font-weight: 700;
     }
+
+
+
+    .ratings-text {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.ratings-text:hover {
+    color: darkblue;
+}
+
+
+/* .review-card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+} */
+
+
+
+/* Modal Background */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000; /* Ensure it appears above everything */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal Content Box */
+.modal-content {
+    background: white;
+    padding: 20px;
+    width: 50%; /* Adjust width */
+    max-width: 500px; /* Prevent too wide */
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Close Button */
+.close {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Reviews Container */
+#reviewsContainer {
+    max-height: 300px;
+    overflow-y: auto; /* Scrollable if too many reviews */
+    text-align: left;
+    padding: 10px;
+}
+
+/* Individual Review */
+.review {
+    background: #f8f8f8;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Smooth Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
     </style>
 </head>
 
@@ -813,6 +905,20 @@ margin-top: 3rem;
             within 24 hrs. PLEASE dont setback, we will bring more organisations at the earliest!</p>
         <div class="card-grid" id="org-cards"></div>
     </div>
+
+
+
+
+    <div id="reviewsModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeReviewsModal()">&times;</span>
+            <h2>Customer Reviews</h2>
+            <div id="reviewsContainer">
+                <!-- Reviews will be displayed here -->
+            </div>
+        </div>
+    </div>
+    
 
 
 
@@ -1144,11 +1250,15 @@ margin-top: 3rem;
                     <div class="card-content">
                         <h2>Organisation: ${org.name}</h2>
                         <p>Email: ${org.email}</p>
+                        <p class="ratings-text" data-orgid="${org.uid}" onclick="fetchReviews('${org.uid}')">⭐ Ratings & Reviews</p>
                     </div>
                     <button class="review-btn" data-orgid="${org.uid}">Share Review</button>
                  `;
                         container.appendChild(card);
                     });
+
+                    
+
 
 
 
@@ -1326,6 +1436,85 @@ window.onclick = (event) => {
 
         }
 
+
+
+
+
+        document.getElementById("reviewForm").addEventListener("submit", async function(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const orgId = document.getElementById("orgId").value;
+    const userId = document.getElementById("userId").value;
+    const message = document.getElementById("message").value;
+    const rating = document.getElementById("rating").value;
+
+    const reviewData = { orgId, userId, message, rating };
+
+    try {
+        const response = await fetch("http://127.0.0.1:5000/submit-review", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(reviewData)
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert("Review submitted successfully!");
+            document.getElementById("reviewForm").reset(); // Reset form after submission
+            document.getElementById("reviewModal2").style.display = "none"; // Close modal
+        } else {
+            alert("Error: " + result.error);
+        }
+    } catch (error) {
+        console.error("Error submitting review:", error);
+    }
+});
+
+
+function fetchReviews(orgId) {
+    console.log("Fetching reviews for orgId:", orgId); 
+    fetch(`/get-reviews?orgId=${orgId}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log("Received reviews:", data);
+            if (data.success) {
+                displayReviews(data.reviews);
+            } else {
+                alert("No reviews found for this organization!");
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching reviews:", error);
+        });
+}
+
+function displayReviews(reviews) {
+    console.log("Displaying reviews:", reviews); 
+    const reviewsContainer = document.getElementById("reviewsContainer");
+    reviewsContainer.innerHTML = ""; // Clear previous reviews
+
+    if (reviews.length === 0) {
+        reviewsContainer.innerHTML = "<p>No reviews available.</p>";
+        return;
+    }
+
+    reviews.forEach(review => {
+        const reviewElement = document.createElement("div");
+        reviewElement.classList.add("review-card");
+        reviewElement.innerHTML = `
+            <p><strong>${review.userName}</strong> (${review.rating} ⭐)</p>
+            <p>${review.message}</p>
+            <hr>
+        `;
+        reviewsContainer.appendChild(reviewElement);
+    });
+
+    document.getElementById("reviewsModal").style.display = "flex";
+}
+
+function closeReviewsModal() {
+    document.getElementById("reviewsModal").style.display = "none";
+}
 
     </script>
 

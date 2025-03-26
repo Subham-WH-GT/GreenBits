@@ -801,5 +801,65 @@ def get_route():
 
 
 
+
+@app.route('/submit-review', methods=['POST'])
+def submit_review():
+    try:
+        data = request.json  # Get JSON data from the request
+        org_id = data.get("orgId")
+        user_id = data.get("userId")
+        message = data.get("message")
+        rating = int(data.get("rating"))
+
+        # Validate input
+        if not (org_id and user_id and message and rating):
+            return jsonify({"error": "Missing required fields"}), 400
+        
+        user_ref = db.collection("users2").where("uid", "==", user_id).stream()
+        user_name = None
+
+        for user in user_ref:
+            user_data = user.to_dict()
+            user_name = user_data.get("name", "Unknown")
+
+        # Store review in Firestore under "reviews" collection
+        review_ref = db.collection("reviews").add({
+            "orgId": org_id,
+            "userId": user_id,
+            "userName": user_name,
+            "message": message,
+            "rating": rating
+        })
+
+        return jsonify({"success": True, "reviewId": review_ref[1].id}), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+@app.route('/get-reviews', methods=['GET'])
+def get_reviews():
+    try:
+        org_id = request.args.get("orgId")  # Get orgId from request parameters
+
+        if not org_id:
+            return jsonify({"error": "Missing orgId"}), 400
+
+        # Fetch reviews matching the orgId
+        reviews_ref = db.collection("reviews").where("orgId", "==", org_id).stream()
+        reviews = []
+
+        for review in reviews_ref:
+            review_data = review.to_dict()
+            reviews.append(review_data)
+
+        return jsonify({"success": True, "reviews": reviews}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)

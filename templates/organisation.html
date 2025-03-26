@@ -315,6 +315,60 @@ input {
             margin-top: 5rem;
         }
 
+
+
+
+        .review-sidebar {
+    position: fixed;
+    top: 0;
+    right: -350px; /* Initially hidden */
+    width: 350px;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: -3px 0 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    transition: right 0.3s ease-in-out;
+    overflow-y: auto;
+}
+
+.review-sidebar h2 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.review-card {
+    background: #f9f9f9;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.review-card p {
+    margin: 5px 0;
+}
+
+.close-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: block;
+    margin: 10px auto;
+    border-radius: 5px;
+}
+
+
+.review-card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+
     </style>
 </head>
 <body>
@@ -345,7 +399,7 @@ input {
             <li onclick="openGreenBitsModal()"><i class="fas fa-gift"></i> Send GreenBits</li>
             <div id="greenBitsModal" class="modal" style="display: none;">
                 <div class="modal-content">
-                    <!-- <span class="close" onclick="closeGreenBitsModal()">&times;</span> -->
+                   
                     <h2>Send GreenBits</h2>
                    
                     <label for="greenBitsAmount">Number of GreenBits:</label>
@@ -358,10 +412,22 @@ input {
                 </div>
             </div>
             
-            <li><i class="fas fa-cogs"></i> Settings</li>
+            <li onclick="fetchReviews()"><i class="fas fa-cogs"></i>Customer Reviews</li>
             <li><i class="fas fa-sign-out-alt"></i> Logout</li>
         </ul>
     </div>
+
+
+    <div id="reviewsModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeReviewsModal()">&times;</span>
+            <h2>Customer Reviews</h2>
+            <div id="reviewsContainer">
+                <!-- Reviews will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+    
 <!-- 
     <div id="ewaste-list">
         <h2>Incoming E-Waste Requests</h2>
@@ -1109,6 +1175,54 @@ function initAutocomplete() {
                 stepsList.appendChild(li);
             });
         }
+
+
+
+
+        function fetchReviews() {
+    const orgId = localStorage.getItem("organizationId");
+
+    fetch(`/get-reviews?orgId=${orgId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayReviews(data.reviews);
+            } else {
+                alert("No reviews found!");
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching reviews:", error);
+        });
+}
+
+function displayReviews(reviews) {
+    const reviewsContainer = document.getElementById("reviewsContainer");
+    reviewsContainer.innerHTML = ""; // Clear previous reviews
+
+    if (reviews.length === 0) {
+        reviewsContainer.innerHTML = "<p>No reviews available.</p>";
+        return;
+    }
+
+    reviews.forEach(review => {
+        const reviewElement = document.createElement("div");
+        reviewElement.classList.add("review-card");
+        reviewElement.innerHTML = `
+            <p><strong>${review.userName}</strong> (${review.rating} ⭐)</p>
+            <p>${review.message}</p>
+            <hr>
+        `;
+        reviewsContainer.appendChild(reviewElement);
+    });
+
+    document.getElementById("reviewsModal").style.display = "block";
+}
+
+function closeReviewsModal() {
+    document.getElementById("reviewsModal").style.display = "none";
+}
+
 
     </script>
 
