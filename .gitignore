@@ -2,4 +2,5 @@
 .env
 
 # Ignore Firebase SDK credentials file
-firebase-admin-sdk.json
+firebase-admin-sdk.json 
+.pkl
