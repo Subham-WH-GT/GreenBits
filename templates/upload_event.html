@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Event</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            max-width: 700px;
+            margin-top: 50px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-control {
+            margin-bottom: 15px;
+        }
+        .btn-upload {
+            background: #28a745;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-upload:hover {
+            background: #218838;
+        }
+        .event-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .event-card img {
+            width: 100%;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+
+
+        .event-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 20px;
+            white-space: nowrap;
+            scroll-behavior: smooth;
+            /* background-color: #8a80806b; */
+        }
+
+        .event-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            overflow: hidden;
+            white-space: normal;
+            word-wrap: break-word;
+            flex: 0 0 auto;
+            text-align: left;
+        }
+
+        .event-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .event-card h3 {
+            font-size: 18px;
+            margin-top: 10px;
+            font-weight: 700;
+        }
+
+        .event-card p {
+            font-size: 14px;
+            color: gray;
+        }
+
+        .scroll-container {
+            /* display: flex; */
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 50px;
+            background-color: #8a80806b;
+            padding-top: 20px;
+        }
+
+        .event-message {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .message2 {
+            font-weight: 700;
+        }
+
+        .scroll-btn {
+            cursor: pointer;
+            font-size: 20px;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 0 10px;
+        }
+
+        .event-head {
+            padding-left: 30px;
+            font-family: monospace;
+            font-size: xxx-large;
+            font-weight: 700;
+        }
+
+        .intro{
+            margin: 25px;
+        }
+
+        .intro-head{
+            font-size: xxx-large;
+    font-family: monospace;
+    font-weight: 600;
+    color: black;
+        }
+
+        .intro-body{
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <div class="intro">
+        <div class="intro-head">
+            🌍 Green Initiatives & Impact Programs
+        </div>
+
+        <div class="intro-body">
+            <div class="intro-body1">
+                At GreenBits, we empower organizations to lead the change in e-waste management! 🌱
+            </div>
+
+            <div class="intro-body2">
+                How It Works:
+            </div>
+
+            <div class="intro-body3">
+                Organizations can create and conduct awareness programs, recycling drives, and eco-friendly initiatives to educate individuals about responsible e-waste disposal. <br>
+            
+ GreenBits will review and track the number of initiatives conducted by each organization. <br>
+ Based on their contribution, organizations will earn Green Points. <br>
+ Organizations with higher Green Points will: <br>
+Get higher visibility & preference on the Individual Dashboard. <br>
+Unlock special benefits & exclusive promotions from GreenBits. <br>
+            </div>
+
+            <div class="intro-body4">
+                By participating actively, your organization not only contributes to a greener planet but also gains recognition and rewards for making a real impact! 
+            </div>
+
+            <div class="intro-body5">
+                Start your Green Initiative today and lead the change! 
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="text-center text-success">Upload Event</h2>
+        <form id="eventForm" enctype="multipart/form-data">
+            <input type="text" name="eventname" class="form-control" placeholder="Event Name" required>
+            <input type="file" name="event_poster_image" class="form-control" accept="image/*" required>
+            <textarea name="eventdescription" class="form-control" placeholder="Event Description" required></textarea>
+            <input type="date" name="eventdate" class="form-control" required>
+            <input type="time" name="eventtime" class="form-control" required>
+            <input type="text" name="eventlocation" class="form-control" placeholder="Event Location" required>
+            <input type="number" name="eventpincode" class="form-control" placeholder="Event Pincode" required>
+            <textarea name="specialmessage" class="form-control" placeholder="Special Message"></textarea>
+            <input type="hidden" id="orgid" name="organisation_id" value="{{ orgid }}">
+            <button type="submit" class="btn btn-upload w-100">Upload Event</button>
+        </form>
+    </div>
+
+    <h2 class="event-head">Upcoming Events</h2>
+
+    <div class="scroll-container">
+        
+
+        <div class="event-container" id="event-container"></div>
+
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.getElementById("eventForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            let formData = new FormData(this);
+            
+            const response = await fetch("/upload-event", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert("Event Uploaded Successfully!");
+                fetchEvents();
+                document.getElementById("eventForm").reset();
+            } else {
+                alert("Error uploading event!");
+                console.error(result.error);
+            }
+        });
+
+        // async function fetchEvents() {
+        //     const response = await fetch("/get-events");
+        //     const events = await response.json();
+
+        //     const container = document.getElementById("eventContainer");
+        //     container.innerHTML = "";
+
+        //     events.forEach(event => {
+        //         const eventCard = `
+        //             <div class="event-card">
+        //                 <h4 class="text-success">${event.eventname}</h4>
+        //                 <p><strong>Date:</strong> ${event.eventdate} | <strong>Time:</strong> ${event.eventtime}</p>
+        //                 <p><strong>Location:</strong> ${event.eventlocation}, ${event.eventpincode}</p>
+        //                 <p>${event.eventdescription}</p>
+        //                 <p><strong>Special Message:</strong> ${event.specialmessage}</p>
+        //                 <p><strong>Organisation ID:</strong> ${event.organisation_id}</p>
+        //                 <img src="${event.event_poster_image}" alt="Event Poster">
+        //             </div>
+        //         `;
+        //         container.innerHTML += eventCard;
+        //     });
+        // }
+
+        // fetchEvents();
+
+
+
+        document.addEventListener("DOMContentLoaded", fetchEvents);
+
+async function fetchEvents() {
+    try {
+        const response = await fetch("/get-events");  // Call Flask API
+        const events = await response.json();
+        const container = document.getElementById("event-container");
+
+        if (events.length === 0) {
+            container.innerHTML = "<p>No upcoming events found.</p>";
+            return;
+        }
+
+        events.forEach(event => {
+            const card = document.createElement("div");
+            card.className = "event-card";
+            card.innerHTML = `
+        <img src="${event.event_poster_image}" alt="Event Poster">
+        <h3>${event.eventname}</h3>
+        <p><b>Date:</b> ${event.eventdate}</p>
+        <p><b>Time:</b> ${event.eventtime}</p>
+        <p><b>Location:</b> ${event.eventlocation}</p>
+        <p><b>Message:</b> ${event.specialmessage}</p>
+    `;
+            container.appendChild(card);
+        });
+
+    } catch (error) {
+        console.error("Error fetching events:", error);
+    }
+}
+
+    </script>
+
+</body>
+</html>

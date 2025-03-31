@@ -423,6 +423,7 @@ input {
         #predict-price{
             /* background-color: red; */
             padding: 15px;
+            font-weight: 100;
         }
     </style>
 </head>
@@ -454,7 +455,7 @@ input {
             <!-- <li><i class="fas fa-users"></i> User Requests</li> -->
 
             <!-- <div class="container2"> -->
-                <h4 id="predict-price" style="cursor: pointer;"><i class="fas fa-calculator"></i>   Predict Price</h4>
+                <h4 id="predict-price" style="cursor: pointer;"><i class="fas fa-calculator"></i>&nbsp;&nbsp;&nbsp;Predict Price</h4>
             <!-- </div> -->
         
             <div class="popup2" id="popup-form2">
@@ -539,6 +540,16 @@ input {
     <div class="main-content">
         <div class="header">
             <h2>Welcome, Organization</h2>
+            <!-- <div class="upload-event">
+                Create-Event
+            </div> -->
+            <!-- <div class="upload-event" onclick="window.location.href='/upload-event';" style="cursor: pointer; color: #28a745; font-weight: bold;">
+                Create-Event
+            </div> -->
+            <div class="upload-event"  style="cursor: pointer; color: #28a745; font-weight: bold;">
+                Create-Event
+            </div>
+            
             <div class="notification" onclick="showNotifications()">
                 <i class="fas fa-bell"></i>
                 <span class="count" id="notif-count">0</span>
@@ -1358,6 +1369,13 @@ $(document).ready(function () {
         });
 
 
+
+
+
+        const orgid = localStorage.getItem("organizationId"); // Replace this with dynamic org ID from backend
+    document.querySelector(".upload-event").addEventListener("click", function() {
+        window.location.href = `/upload-event?orgid=${orgid}`;
+    });
 
     </script>
 

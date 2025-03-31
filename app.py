@@ -2,13 +2,15 @@ from flask import Flask,  render_template, request, redirect, url_for, session,j
 import sqlite3 
 import requests
 from model import predict_e_waste 
-import firebase_admin
+import firebase_admin 
+from datetime import timedelta
 from firebase_admin import credentials, firestore
 import os 
 import joblib 
 from google.cloud import storage
 from dotenv import load_dotenv 
-load_dotenv()
+load_dotenv() 
+import uuid
 import pandas as pd
 from werkzeug.utils import secure_filename 
 from flask_cors import CORS
@@ -936,7 +938,91 @@ def predict2():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+@app.route("/upload-event", methods=["GET"])
+def upload_event():
+    orgid = request.args.get("orgid", "")
+    return render_template("upload_event.html", orgid=orgid)
 
+bucket_name2 = "event_poster"  # Update with your bucket name
+storage_client = storage.Client()
+bucket2 = storage_client.bucket(bucket_name2) 
+
+
+
+@app.route('/upload-event', methods=['POST'])
+def handle_upload_event():
+    try:
+        # Get event details from form
+        event_name = request.form['eventname']
+        event_description = request.form['eventdescription']
+        event_date = request.form['eventdate']
+        event_time = request.form['eventtime']
+        event_location = request.form['eventlocation']
+        event_pincode = request.form['eventpincode']
+        special_message = request.form['specialmessage']
+        organisation_id = request.form['organisation_id']
+        # image = request.files['event_poster_image']
+        image = request.files.get('event_poster_image')
+
+        # Generate unique filename
+        filename = f"event-posters/{uuid.uuid4()}_{image.filename}"
+
+        # Upload image to Google Cloud Storage
+        blob = bucket2.blob(filename)
+        blob.upload_from_file(image)
+        # blob.make_public()  # Make the image publicly accessible
+
+        # Get the public URL of the uploaded image
+        # image_url = blob.public_url 
+        # image_url = blob.generate_signed_url(expiration=datetime.timedelta(days=365), version="v4")
+        image_url = blob.generate_signed_url(expiration=timedelta(days=7), version="v4")
+
+        # Store event details in Firestore
+        db.collection('events').add({
+            'eventname': event_name,
+            'eventdescription': event_description,
+            'eventdate': event_date,
+            'eventtime': event_time,
+            'eventlocation': event_location,
+            'eventpincode': event_pincode,
+            'specialmessage': special_message,
+            'organisation_id': organisation_id,
+            'event_poster_image': image_url  # Store public image URL
+        })
+
+        return jsonify({"message": "Event uploaded successfully!", "imageUrl": image_url}), 200
+
+    except Exception as e:
+         print(f"Error: {str(e)}")  # Print error in terminal
+         return jsonify({"error": str(e)}), 500
+
+# @app.route('/get-events', methods=['GET'])
+# def get_events():
+#     try:
+#         events = db.collection('events').stream()
+#         event_list = [event.to_dict() for event in events]
+#         return jsonify(event_list), 200
+
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 500    
+
+
+@app.route("/get-events", methods=["GET"])
+def get_events():
+    try:
+        events_ref = db.collection("events").stream()
+        today = datetime.today().strftime('%Y-%m-%d')
+
+        upcoming_events = []
+        for event in events_ref:
+            event_data = event.to_dict()
+            if event_data["eventdate"] >= today:  # Filter only upcoming events
+                upcoming_events.append(event_data)
+
+        return jsonify(upcoming_events)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == '__main__':
