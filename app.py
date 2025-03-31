@@ -5,6 +5,8 @@ from model import predict_e_waste
 import firebase_admin
 from firebase_admin import credentials, firestore
 import os 
+import joblib 
+from google.cloud import storage
 from dotenv import load_dotenv 
 load_dotenv()
 import pandas as pd
@@ -858,6 +860,82 @@ def get_reviews():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\user\Downloads\mutualfund-452915-9cfb77a2b866.json"
+
+# Define GCS details
+BUCKET_NAME = "predict-price"
+MODEL_PATH = "models/model.pkl"
+ENCODER_PATH = "models/label_encoders.pkl"
+LOCAL_MODEL_PATH = "price_prediction_model.pkl"
+LOCAL_ENCODER_PATH = "label_encoders.pkl"
+
+def download_file_from_gcs(bucket_name, source_blob_name, destination_file_name):
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(source_blob_name)
+    blob.download_to_filename(destination_file_name)
+
+# Download model & encoders
+# download_file_from_gcs(BUCKET_NAME, MODEL_PATH, LOCAL_MODEL_PATH)
+# download_file_from_gcs(BUCKET_NAME, ENCODER_PATH, LOCAL_ENCODER_PATH)
+
+# Load model and encoders
+model = joblib.load(LOCAL_MODEL_PATH)
+label_encoders = joblib.load(LOCAL_ENCODER_PATH) 
+
+
+
+
+
+# @app.route("/predict2", methods=["POST"])
+# def predict2():
+#     try:
+#         # Get input data
+#         data = request.get_json()
+#         input_df = pd.DataFrame([data])
+
+#         # Encode categorical inputs
+#         for col in ["Product Type", "Condition"]:
+#             if col in label_encoders:
+#                 if data[col] in label_encoders[col].classes_:
+#                     input_df[col] = label_encoders[col].transform([data[col]])
+#                 else:
+#                     return jsonify({"error": f"Unknown category '{data[col]}' for '{col}'"}), 400
+
+#         # Predict price
+#         predicted_price = model.predict(input_df)[0]
+
+#         return jsonify({"predicted_price": round(predicted_price, 2)})
+    
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 500
+
+@app.route("/predict2", methods=["POST"])
+def predict2():
+    try:
+        # Get input data
+        data = request.get_json()
+        input_df = pd.DataFrame([data])
+
+        # Encode categorical inputs
+        for col in ["Product Type", "Condition"]:
+            if col in label_encoders:
+                if data[col] in label_encoders[col].classes_:
+                    input_df[col] = label_encoders[col].transform([data[col]])
+                else:
+                    return jsonify({"error": f"Unknown category '{data[col]}' for '{col}'"}), 400
+
+        # Predict price
+        predicted_price = model.predict(input_df)[0]
+
+        return jsonify({"predicted_price": round(predicted_price, 2)})
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
 
 
 
