@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organization Dashboard - E-Waste Management</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZYgMbiyT1Ei5jsFqLtuBWrUqtieJLYNU&libraries=places"></script>
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -425,6 +426,29 @@ input {
             padding: 15px;
             font-weight: 100;
         }
+
+
+
+
+        
+select, button {
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.show-bar {
+    color: blue;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.show-bar:hover {
+    text-decoration: underline;
+}
+
+.container{
+    margin-top: 2rem;
+}
     </style>
 </head>
 <body>
@@ -546,7 +570,7 @@ input {
             <!-- <div class="upload-event" onclick="window.location.href='/upload-event';" style="cursor: pointer; color: #28a745; font-weight: bold;">
                 Create-Event
             </div> -->
-            <div class="upload-event"  style="cursor: pointer; color: #28a745; font-weight: bold;">
+            <div class="upload-event"  style="cursor: pointer;text-decoration: underline;  color: #142175; font-weight: bold;">
                 Create-Event
             </div>
             
@@ -555,6 +579,25 @@ input {
                 <span class="count" id="notif-count">0</span>
             </div>
         </div>
+
+
+
+        <div class="container" >
+            <h2>Predict E-Waste Generation (Year - 2025)</h2>
+            <label for="state">Select a State:</label>
+            <select id="state">
+                {% for state in states %}
+                    <option value="{{ state }}">{{ state }}</option>
+                {% endfor %}
+            </select>
+            <button onclick="predictEwaste()">Predict</button>
+            <p id="prediction"></p>
+    
+            <p class="show-bar" onclick="fetchBarData()">Show Bar</p>
+            <canvas id="barChart" style="display:none;"></canvas>
+        </div>
+
+
 
 
         <div class="container">
@@ -1376,6 +1419,55 @@ $(document).ready(function () {
     document.querySelector(".upload-event").addEventListener("click", function() {
         window.location.href = `/upload-event?orgid=${orgid}`;
     });
+
+
+
+
+
+    function predictEwaste() {
+            let state = document.getElementById("state").value;
+            fetch('/predict3', {
+                method: 'POST',
+                body: JSON.stringify({ state: state }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("prediction").innerText = `Predicted E-Waste for ${data.state} in 2025: ${data.prediction} tons`;
+            });
+        }
+
+        function fetchBarData() {
+            fetch('/bar-data')
+            .then(response => response.json())
+            .then(data => {
+                let states = Object.keys(data);
+                let values = Object.values(data);
+
+                let ctx = document.getElementById('barChart').getContext('2d');
+                document.getElementById('barChart').style.display = 'block';
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: states,
+                        datasets: [{
+                            label: 'E-Waste (Tons) in 2025',
+                            data: values,
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            });
+        }
 
     </script>
 

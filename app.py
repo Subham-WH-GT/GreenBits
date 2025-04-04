@@ -99,7 +99,7 @@ E_WASTE_HANDLING_STEPS = {
 }
 
 
-
+models = joblib.load("e_waste_models.pkl")
 
 
 
@@ -172,7 +172,8 @@ def org_signin():
 
 @app.route("/organisation")
 def organisation_page():
-    return render_template("organisation.html")
+    states = list(models.keys())
+    return render_template("organisation.html",states=states)
 
 
 
@@ -1024,6 +1025,20 @@ def get_events():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+
+@app.route('/predict3', methods=['POST'])
+def predict3():
+    state = request.json['state']
+    if state in models:
+        predicted_e_waste = int(models[state].predict([[2025]])[0])
+        return jsonify({'state': state, 'prediction': predicted_e_waste})
+    return jsonify({'error': 'Invalid state selected'}), 400
+
+@app.route('/bar-data', methods=['GET'])
+def bar_data():
+    predictions = {state: int(models[state].predict([[2025]])[0]) for state in models}
+    return jsonify(predictions)
 
 if __name__ == '__main__':
     app.run(debug=True)
