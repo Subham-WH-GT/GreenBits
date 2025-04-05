@@ -8,24 +8,24 @@ import os
 MODEL_PATH = "model/e_waste_classifier.h5"
 model = tf.keras.models.load_model(MODEL_PATH)
 
-# Load class labels dynamically
+
 dataset_dir = "C:/Users/user/Desktop/GreenBit/modified-dataset"
 train_dir = os.path.join(dataset_dir, "train")
-categories = sorted(os.listdir(train_dir))  # Gets the folder names (class labels)
+categories = sorted(os.listdir(train_dir))  
 
-# Function to preprocess images before prediction
+
 def preprocess_image(img_path):
     img = image.load_img(img_path, target_size=(224, 224))
-    img_array = image.img_to_array(img) / 255.0  # Normalize
-    img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
+    img_array = image.img_to_array(img) / 255.0 
+    img_array = np.expand_dims(img_array, axis=0) 
     return img_array
 
-# Prediction function
+
 def predict_e_waste(img_path):
     img_array = preprocess_image(img_path)
     pred = model.predict(img_array)
     
-    # Print probability distribution for debugging
+   
     print("Raw Predictions:", pred)
 
     predicted_class = categories[np.argmax(pred)]

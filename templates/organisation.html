@@ -263,13 +263,6 @@ input {
     background-color: #c82333;
 }
 
-/* #map {
-            height: 500px;
-            width: 100%;
-            margin-top: 10px;
-        } */
-
-
 
         #sidebar2 {
             width: 35%;
@@ -287,14 +280,7 @@ input {
             margin: 5px;
             width: 90%;
         }
-        /* button {
-            padding: 10px;
-            background: blue;
-            color: white;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-        } */
+   
         h3 {
             margin-top: 10px;
             color: #333;
@@ -454,20 +440,6 @@ select, button {
 <body>
 
 
-    <!-- <div id="orgModal" class="modal">
-        <div class="modal-content">
-            <h2>Enter Organization Details</h2>
-            <form id="orgForm">
-                <label for="orgName">Organization Name:</label>
-                <input type="text" id="orgName" name="orgName" required>
-    
-                <label for="orgDescription">Description:</label>
-                <textarea id="orgDescription" name="orgDescription" required></textarea>
-    
-                <button type="submit">Save</button>
-            </form>
-        </div>
-    </div> -->
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -605,42 +577,7 @@ select, button {
             <div id="product-list" class="row"></div>
         </div>
 
-        <!-- Table for User Requests -->
-        <!-- <div class="table-container">
-            <h3>Pending User Requests</h3>
-            <table>
-                <tr>
-                    <th>Product_Name</th>
-                    <th>product_age</th>
-                    <th>Brand</th>
-                    
-                    <th>model</th>
-                    
-                    <th>description"</th>
-                </tr>
-                <tr>
-                    <td>phone</td>
-                    <td>4</td>
-                    <td>4 years</td>
-                    <td>Dell</td>
-                    <td>
-                        <button class="btn btn-accept" onclick="acceptRequest(this)">Accept</button>
-                        <button class="btn btn-decline" onclick="declineRequest(this)">Decline</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Alice Smith</td>
-                    <td>Mobile Phone</td>
-                    <td>2 years</td>
-                    <td>Samsung</td>
-                    <td>
-                        <button class="btn btn-accept" onclick="acceptRequest(this)">Accept</button>
-                        <button class="btn btn-decline" onclick="declineRequest(this)">Decline</button>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div> -->
+       
 
 
     <div class="table-container">
@@ -658,7 +595,7 @@ select, button {
                 <th>Actions</th>
             </tr>
             <tbody id="requests-table">
-                <!-- Requests will be dynamically inserted here -->
+               
             </tbody>
         </table>
     </div>
@@ -707,12 +644,6 @@ select, button {
 
 
 
-<!-- <h2>Optimized Route Finder</h2>
-<input type="text" id="source" placeholder="Enter Source Location">
-<input type="text" id="destination" placeholder="Enter Destination Location">
-<button onclick="getOptimizedRoute()">Find Route</button>
-
-<div id="map"></div> -->
 
 <div class="bind">
 <div id="sidebar2">
@@ -765,37 +696,12 @@ async function fetchOrganizationDeliveries() {
 }
 
 function displayDeliveries(deliveries) {
-    // const tableBody = document.getElementById("deliveries-table");
-
-    // tableBody.innerHTML = "";  // Clear previous data
-
-    // deliveries.forEach(delivery => {
-    //     const row = document.createElement("tr");
-    //     row.innerHTML = `
-    //         <td>${delivery.customer_id}</td>
-    //         <td>${delivery.customer_mail}</td>
-    //         <td>${delivery.customer_contact_no}</td>
-    //         <td>${delivery.product_id}</td>
-    //         <td>${delivery.location}</td>
-    //         <td>${delivery.pincode}</td>
-    //         <td>${delivery.state}</td> 
-    //         <td id="status-${delivery.product_id}">
-    //             <input type="checkbox" id="checkbox-${delivery.product_id}" 
-    //                 onchange="toggleReceivedButton('${delivery.product_id}')">
-    //             <button id="received-btn-${delivery.product_id}" disabled 
-    //                 onclick="markAsReceived('${delivery.product_id}', '${delivery.customer_id}')">
-    //                 Received
-    //             </button>
-    //         </td>
-    //     `;
-    //     tableBody.appendChild(row);
-    // });
-
+ 
 
 
 
     const tableBody = document.getElementById("deliveries-table");
-    tableBody.innerHTML = ""; // Clear previous data
+    tableBody.innerHTML = ""; 
 
     deliveries.forEach(delivery => {
         const row = document.createElement("tr");
@@ -844,7 +750,7 @@ function markAsReceived(productId, customerId) {
 
     if (!checkbox.checked) return; // Ensure the checkbox is checked
 
-    // Replace checkbox and button with green "Received" text
+   
 
     // Show the Green Bit Modal
     const orgId = localStorage.getItem("organizationId");
@@ -856,50 +762,6 @@ function markAsReceived(productId, customerId) {
 
 
 
-// document.addEventListener("DOMContentLoaded", function () {
-//         const orgId = localStorage.getItem("organizationId"); // Get stored org ID
-//         if (!orgId) {
-//             alert("No organization logged in!");
-//             window.location.href = "login.html";  // Redirect to login
-//         } else {
-//             fetchProducts(orgId);
-//         }
-//     });
-
-//     async function fetchProducts(orgId) {
-//         try {
-//             const response = await fetch(`http://127.0.0.1:5000/get_products/${orgId}`);
-//             const data = await response.json();
-
-//             if (!data.products || data.products.length === 0) {
-//                 document.getElementById("product-list").innerHTML = "<p>No products found.</p>";
-//                 return;
-//             }
-
-//             const productList = document.getElementById("product-list");
-//             productList.innerHTML = "";  // Clear previous content
-
-//             data.products.forEach(product => {
-//                 const card = `
-//                     <div class="col-md-4">
-//                         <div class="card">
-//                             <div class="card-body">
-//                                 <h5 class="card-title">${product.product_name}</h5>
-//                                 <p><strong>Brand:</strong> ${product.brand}</p>
-//                                 <p><strong>Model:</strong> ${product.model}</p>
-//                                 <p><strong>Description:</strong> ${product.description}</p>
-//                                 <p><strong>Submitted By:</strong> ${product.email}</p>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 `;
-//                 productList.innerHTML += card;
-//             });
-
-//         } catch (error) {
-//             console.error("Error fetching products:", error);
-//         }
-//     }
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -968,24 +830,7 @@ function displayRequests(requests) {
     });
 
 
-    // requests.forEach(request => {
-    //     const row = document.createElement("tr");
-    //     row.innerHTML = `
-    //         <td>${request.user_id}</td>
-    //         <td>${request.email}</td>
-    //         <td>${request.product_id}</td>
-    //         <td>${request.product_name}</td>
-    //         <td>${request.product_age}</td>
-    //         <td>${request.brand}</td>
-    //         <td>${request.model}</td>
-    //         <td>${request.description}</td>
-    //          <td>
-    //             <button onclick="showAcceptPopup(this,'${request.product_name}','${request.model}','${request.user_id}','${request.product_id}')">Accept</button>
-    //             <button onclick="showDeclinePopup(this, '${request.product_name}','${request.model}','${request.user_id}')">Decline</button>
-    //         </td>
-    //     `;
-    //     tableBody.appendChild(row);
-    // });
+   
 }
 
 
@@ -1089,12 +934,12 @@ async function getOrganizationName(organizationId) {
     const organizationId = localStorage.getItem("organizationId");
 
 const organizationName = await getOrganizationName(organizationId);
-    // Get input values from the popup (only for approval)
+    
     const messageType="approval"
     const message =document.getElementById("approval-message").value;
     const estimatedPrice =document.getElementById("estimated-price").value;
 
-    // Prepare data payload
+   
     const data = {
         organizationName,
         organizationId,
@@ -1107,7 +952,7 @@ const organizationName = await getOrganizationName(organizationId);
         estimatedPrice
     };
 
-    // Send data to Flask backend
+    
     try {
         const response = await fetch("http://127.0.0.1:5000/store_message", {
             method: "POST",
@@ -1120,7 +965,7 @@ const organizationName = await getOrganizationName(organizationId);
         const result = await response.json();
         if (response.ok) {
             alert("Message stored successfully!");
-            closePopup(); // Hide popup after success
+            closePopup(); 
 
 
             fetchOrganizationRequests();
@@ -1173,7 +1018,7 @@ function sendGreenBits() {
     
     console.log("Sending GreenBits:", requestData);
 
-// Send data to Flask backend
+
 fetch("/send_greenbits", {
     method: "POST",
     headers: {
@@ -1203,62 +1048,6 @@ fetchOrganizationDeliveries();
 
 
 
-// function initAutocomplete() {
-//             new google.maps.places.Autocomplete(document.getElementById("source"));
-//             new google.maps.places.Autocomplete(document.getElementById("destination"));
-//         }
-
-//         window.onload = initAutocomplete;
-
-//         function getOptimizedRoute() {
-//             let source = document.getElementById("source").value;
-//             let destination = document.getElementById("destination").value;
-
-//             if (!source || !destination) {
-//                 alert("Please enter both locations");
-//                 return;
-//             }
-
-//             fetch("/get_route", {
-//                 method: "POST",
-//                 headers: { "Content-Type": "application/json" },
-//                 body: JSON.stringify({ source, destination })
-//             })
-//             .then(response => response.json())
-//             .then(data => {
-//                 if (data.status === "OK") {
-//                     displayRoute(data.route);
-//                 } else {
-//                     alert("Error fetching route: " + data.message);
-//                 }
-//             })
-//             .catch(error => console.error("Error:", error));
-//         }
-
-//         function displayRoute(route) {
-//             let map = new google.maps.Map(document.getElementById("map"), {
-//                 zoom: 7,
-//                 center: route.start_location
-//             });
-
-//             let directionsService = new google.maps.DirectionsService();
-//             let directionsRenderer = new google.maps.DirectionsRenderer();
-//             directionsRenderer.setMap(map);
-
-//             let request = {
-//                 origin: route.start_address,
-//                 destination: route.end_address,
-//                 travelMode: "DRIVING"
-//             };
-
-//             directionsService.route(request, (result, status) => {
-//                 if (status === "OK") {
-//                     directionsRenderer.setDirections(result);
-//                 } else {
-//                     alert("Could not display directions: " + status);
-//                 }
-//             });
-//         }
 
 
 
@@ -1318,7 +1107,7 @@ function initAutocomplete() {
                 }
             });
 
-            // Update Route Details
+           
             document.getElementById("distance").innerText = route.distance;
             document.getElementById("duration").innerText = route.duration;
             
@@ -1353,7 +1142,7 @@ function initAutocomplete() {
 
 function displayReviews(reviews) {
     const reviewsContainer = document.getElementById("reviewsContainer");
-    reviewsContainer.innerHTML = ""; // Clear previous reviews
+    reviewsContainer.innerHTML = ""; 
 
     if (reviews.length === 0) {
         reviewsContainer.innerHTML = "<p>No reviews available.</p>";
@@ -1415,7 +1204,7 @@ $(document).ready(function () {
 
 
 
-        const orgid = localStorage.getItem("organizationId"); // Replace this with dynamic org ID from backend
+        const orgid = localStorage.getItem("organizationId"); 
     document.querySelector(".upload-event").addEventListener("click", function() {
         window.location.href = `/upload-event?orgid=${orgid}`;
     });

@@ -3,10 +3,10 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 import joblib
 
-# Load dataset
+
 df = pd.read_csv("india_e_waste_prediction_dataset.csv")
 
-# Train models for each state
+
 models = {}
 for state in df["State"]:
     state_data = df[df["State"] == state].drop(columns=["State"]).T

@@ -7,14 +7,14 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.metrics import mean_absolute_error, r2_score
 
-# Load the dataset
-df = pd.read_csv("product.csv")  # Change the path if needed
 
-# Selecting relevant features & target variable
+df = pd.read_csv("product.csv")  
+
+
 X = df[["Age", "Condition", "Original Price"]]
 y = df["Resale Price"]
 
-# One-hot encode the categorical column 'Condition'
+
 categorical_features = ["Condition"]
 numeric_features = ["Age", "Original Price"]
 
@@ -25,19 +25,19 @@ preprocessor = ColumnTransformer(
     ]
 )
 
-# Create the model pipeline
+
 model = Pipeline([
     ("preprocessor", preprocessor),
     ("regressor", RandomForestRegressor(n_estimators=100, random_state=42))
 ])
 
-# Split data into training & testing sets
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Train the model
+
 model.fit(X_train, y_train)
 
-# Predict & evaluate
+
 y_pred = model.predict(X_test)
 mae = mean_absolute_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)

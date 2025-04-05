@@ -90,9 +90,7 @@
         }
 
         .next {
-            /* display: flex;
-            align-items: flex-start;
-            justify-content: flex-start; */
+           
             border-radius: 3px 0 0 3px;
         }
 
@@ -348,9 +346,7 @@
                 are as follows: Maharashtra, Tamil Nadu and Andhra Pradesh. Other states that produce significant e-waste
                 are Uttar Pradesh, West Bengal, Delhi, Karnataka, Gujarat, Madhya Pradesh and Punjab.<br>
     
-                <!-- Additionally, e-waste is disproportionately generated in urban areas—65 Indian cities generate more than 60%
-                of India's total e-waste. Mumbai is the top e-waste producer followed by Delhi, Bengaluru, Chennai, and
-                Kolkata. -->
+                
             </div>
             <img src="/static/images/citis.jpg" alt="">
         </div>
@@ -385,7 +381,7 @@
 
     <script>
 
-        // ✅ Initialize Firebase
+        
 const firebaseConfig = {
     apiKey: "AIzaSyCCGB4SsonBzfj8R37GuOt1R7In0QU5TYw",
     authDomain: "greenbits-b07d8.firebaseapp.com",
@@ -396,11 +392,11 @@ const firebaseConfig = {
     measurementId: "G-NZ5WCZZE4W"
 };
 
-// ✅ Initialize Firebase App
+
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-// ✅ Authentication Functions
+
 function signIn() {
   
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -409,10 +405,10 @@ function signIn() {
         .then((result) => {
             console.log("✅ User signed in:", result.user);
             
-            // Store UID for later use
+            
             const userUID = result.user.uid;  
 
-            fetch("http://127.0.0.1:5000/login", {  // Keep the existing login route
+            fetch("http://127.0.0.1:5000/login", {  
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -428,7 +424,7 @@ function signIn() {
             .then(data => {
                 console.log("📢 Backend Response:", data);
 
-                // ✅ Redirect to personhome.html after login
+                
                 if (!data.error) {
                     console.log("➡️ Redirecting to personhome...");
                     window.location.href = "/personhome";  
@@ -444,7 +440,7 @@ function signIn() {
 
    
 
-        // Add interactivity here if needed
+        
         let slideIndex = 0;
         showSlides(slideIndex);
 
@@ -478,10 +474,10 @@ function signIn() {
                     uid: result.user.uid,
                     name: result.user.displayName,
                     email: result.user.email,
-                    // profile_picture: result.user.photoURL
+                   
                 };
                 localStorage.setItem("organizationId", result.user.uid);
-                // Send organization data to backend
+                
                 fetch("http://127.0.0.1:5000/org_signin", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -491,7 +487,7 @@ function signIn() {
                 .then(data => {
                     console.log("Organization data sent to backend:", data);
                     
-                    // Redirect to organization dashboard
+                    
                     window.location.href = `http://127.0.0.1:5000/organisation`;
                 })
                 .catch(error => console.error("Error sending data:", error));
